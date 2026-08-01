@@ -1,2 +1,8 @@
 .claude
 en.subject.pdf
+
+# build artifacts
+*.o
+*.a
+obj/
+miniRT
