@@ -2,6 +2,7 @@ NAME		= miniRT
 
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror
+DEBUGFLAGS = -g
 
 MLX_DIR		= includes/minilibx-linux
 MLX_LIB		= $(MLX_DIR)/libmlx.a
@@ -15,6 +16,11 @@ LIBS		= $(LIBFT) -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 SRC_DIR		= src
 OBJ_DIR		= obj
 
+CANVAS_DIR = canvas
+TUPLES_DIR = tuples
+MATRIX_DIR = matrix
+MATRIX_TRANS_DIR = matrix_transformations
+
 SRC			= main.c \
 			  parsing/parse.c \
 			  parsing/parse_utils.c \
@@ -26,12 +32,24 @@ SRC			= main.c \
 			  window/init_mlx.c \
 			  window/hooks.c
 
-OBJ			= $(SRC:%.c=$(OBJ_DIR)/%.o)
+TUPLES_SRC = tuple.c tuple_utils.c print_utils.c tuple_math1.c vector_math1.c
+# CANVAS_SRC = color.c color_math.c canvas.c
+MATRIX_SRC = matrix.c matrix_math.c matrices.c invert_matrix.c invert_matrix_utils.c
+MATRIX_TRANS_SRC = translation.c scaling.c rotation.c shearing.c
+
+OBJ			= $(SRC:%.c=$(OBJ_DIR)/%.o) \
+$(addprefix $(OBJ_DIR)/$(TUPLES_DIR)/, $(TUPLES_SRC:.c=.o)) \
+$(addprefix $(OBJ_DIR)/$(MATRIX_DIR)/, $(MATRIX_SRC:.c=.o)) \
+$(addprefix $(OBJ_DIR)/$(MATRIX_TRANS_DIR)/, $(MATRIX_TRANS_SRC:.c=.o)) \
+# $(addprefix $(OBJ_DIR)/$(CANVAS_DIR)/, $(CANVAS_SRC:.c=.o)) \
 
 all: $(NAME)
 
 $(NAME): $(MLX_LIB) $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
+
+debug: CFLAGS+=$(DEBUGFLAGS)
+debug: all
 
 $(MLX_LIB):
 	$(MAKE) -C $(MLX_DIR)
@@ -41,6 +59,22 @@ $(LIBFT):
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c includes/minirt.h
 	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
+$(OBJ_DIR)/$(TUPLES_DIR)/%.o: $(SRC_DIR)/$(TUPLES_DIR)/%.c includes/minirt.h
+	mkdir -p $(OBJ_DIR)/$(TUPLES_DIR)
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
+# $(OBJ_DIR)/$(CANVAS_DIR)/%.o: $(SRC_DIR)/$(CANVAS_DIR)/%.c includes/minirt.h
+# 	mkdir -p $(OBJ_DIR)/$(CANVAS_DIR)
+# 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
+$(OBJ_DIR)/$(MATRIX_DIR)/%.o: $(SRC_DIR)/$(MATRIX_DIR)/%.c includes/minirt.h
+	mkdir -p $(OBJ_DIR)/$(MATRIX_DIR)
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
+$(OBJ_DIR)/$(MATRIX_TRANS_DIR)/%.o: $(SRC_DIR)/$(MATRIX_TRANS_DIR)/%.c includes/minirt.h
+	mkdir -p $(OBJ_DIR)/$(MATRIX_TRANS_DIR)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 bonus: all
