@@ -25,8 +25,9 @@ int	main(int argc, char **argv)
 	rt.scene.has_ambient = 0;
 	rt.scene.has_camera = 0;
 	rt.scene.has_light = 0;
-	if (parse_scene(argv[1], &rt.scene))
-		return (1);
+	(void)argv;
+	// if (parse_scene(argv[1], &rt.scene))
+	// 	return (1);
 	if (init_mlx(&rt))
 	{
 		cleanup_rt(&rt);
