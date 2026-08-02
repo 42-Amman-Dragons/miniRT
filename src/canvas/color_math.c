@@ -15,44 +15,44 @@
 t_color add_colors(t_color c1, t_color c2)
 {
     return ((t_color){
-        c1.red + c2.red,
-        c1.green + c2.green,
-        c1.blue + c2.blue
+        c1.r + c2.r,
+        c1.g + c2.g,
+        c1.b + c2.b
     });
 }
 
 t_color sub_colors(t_color c1, t_color c2)
 {
     return ((t_color){
-        c1.red - c2.red,
-        c1.green - c2.green,
-        c1.blue - c2.blue
+        c1.r - c2.r,
+        c1.g - c2.g,
+        c1.b - c2.b
     });
 }
 
-t_color scale_color(t_color c, float scalar)
+t_color scale_color(t_color c, double scalar)
 {
     return ((t_color){
-        c.red * scalar,
-        c.green * scalar,
-        c.blue * scalar
+        c.r * scalar,
+        c.g * scalar,
+        c.b * scalar
     });
 }
 
-t_color divide_color(t_color c, float num)
+t_color divide_color(t_color c, double num)
 {
     return ((t_color){
-        c.red / num,
-        c.green / num,
-        c.blue / num
+        c.r / num,
+        c.g / num,
+        c.b / num
     });
 }
 
 t_color mult_color(t_color c1, t_color c2)
 {
     return ((t_color){
-        c1.red * c2.red,
-        c1.green * c2.green,
-        c1.blue * c2.blue
+        c1.r * c2.r,
+        c1.g * c2.g,
+        c1.b * c2.b
     });
 }

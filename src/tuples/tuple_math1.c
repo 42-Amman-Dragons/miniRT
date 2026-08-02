@@ -52,7 +52,7 @@ t_tuple negate_tuple(t_tuple t)
     });
 }
 
-t_tuple scale_tuple(t_tuple t, float scalar)
+t_tuple scale_tuple(t_tuple t, double scalar)
 {
     return ((t_tuple){
         t.x * scalar,
@@ -62,7 +62,7 @@ t_tuple scale_tuple(t_tuple t, float scalar)
     });
 }
 
-t_tuple divide_tuple(t_tuple t, float num)
+t_tuple divide_tuple(t_tuple t, double num)
 {
     return ((t_tuple){
         t.x / num,

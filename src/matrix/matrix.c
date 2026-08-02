@@ -37,20 +37,20 @@ void free_matrix(t_matrix *m)
     free(m);
 }
 
-float **create_empty_data(int col, int row)
+double **create_empty_data(int col, int row)
 {
     int i; 
-    float **data;
+    double **data;
 
     i = 0;
     if(!col || !row)
         return(NULL);
-    data = ft_calloc(row , sizeof(float *));
+    data = ft_calloc(row , sizeof(double *));
     if(!data)
         return (NULL);
     while(i < row)
     {
-        data[i] = ft_calloc(col, sizeof(float));
+        data[i] = ft_calloc(col, sizeof(double));
         if(!data[i])
         {
             while(i > 0)
@@ -67,12 +67,12 @@ float **create_empty_data(int col, int row)
     return (data);
 }
 
-float **create_data(float *values, int col, int row)
+double **create_data(double *values, int col, int row)
 {
     int i; 
     int y;
     int x;
-    float **data;
+    double **data;
 
     data = create_empty_data(col, row);
     if (!data)
@@ -94,7 +94,7 @@ float **create_data(float *values, int col, int row)
     return (data);
 }
 
-t_matrix *new_matrix(float *values, int col, int row)
+t_matrix *new_matrix(double *values, int col, int row)
 {
     t_matrix *m;
 

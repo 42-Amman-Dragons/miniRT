@@ -12,11 +12,9 @@
 
 #include "minirt.h"
 
-const float e = 0.00001;
-
-int is_equal_f(float a, float b)
+int is_equal_d(double a, double b)
 {
-    if(fabs(a - b) < e)
+    if(fabs(a - b) < EPSILON)
         return(1);
     else 
         return(0);    

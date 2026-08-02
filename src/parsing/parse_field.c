@@ -43,7 +43,11 @@ static char	**split_triplet(char *s)
 	return (parts);
 }
 
-int	parse_vec3(char *s, t_vec3 *out)
+/*
+** The file gives three bare numbers; only the element parser knows whether
+** they are a position or a direction, so w is left at 0 for it to set.
+*/
+int	parse_triplet(char *s, t_tuple *out)
 {
 	char	**parts;
 
@@ -54,6 +58,23 @@ int	parse_vec3(char *s, t_vec3 *out)
 		|| parse_double(parts[2], &out->z))
 		return (free_tokens(parts), 1);
 	free_tokens(parts);
+	out->w = 0;
+	return (0);
+}
+
+/*
+** The scene file states each channel as an integer in [0,255]; the renderer
+** works with ratios, so validate the file's form then store it as [0.0,1.0].
+*/
+static int	parse_channel(char *s, double *out)
+{
+	int	value;
+
+	if (parse_int(s, &value))
+		return (1);
+	if (value < 0 || value > 255)
+		return (1);
+	*out = value / 255.0;
 	return (0);
 }
 
@@ -64,12 +85,9 @@ int	parse_color(char *s, t_color *out)
 	parts = split_triplet(s);
 	if (!parts)
 		return (1);
-	if (parse_int(parts[0], &out->r) || parse_int(parts[1], &out->g)
-		|| parse_int(parts[2], &out->b))
+	if (parse_channel(parts[0], &out->r) || parse_channel(parts[1], &out->g)
+		|| parse_channel(parts[2], &out->b))
 		return (free_tokens(parts), 1);
 	free_tokens(parts);
-	if (out->r < 0 || out->r > 255 || out->g < 0 || out->g > 255 || out->b < 0
-		|| out->b > 255)
-		return (1);
 	return (0);
 }

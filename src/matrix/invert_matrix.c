@@ -12,9 +12,9 @@
 
 #include "minirt.h"
 
-float calc_det(t_matrix m)
+double calc_det(t_matrix m)
 {
-    float det;
+    double det;
     int i;
     
     det = 0;
@@ -42,7 +42,7 @@ t_matrix *submatrix(t_matrix m, int row, int col)
     int i;
     int c;
     int r;
-    float data[(m.row - 1)*(m.col -1)];
+    double data[(m.row - 1)*(m.col -1)];
 
     if(row >= m.row || col >= m.col)
         return (NULL);
@@ -67,10 +67,10 @@ t_matrix *submatrix(t_matrix m, int row, int col)
 }
 
 
-float minor(t_matrix m, int row, int col)
+double minor(t_matrix m, int row, int col)
 {
     t_matrix *sub;
-    float det;
+    double det;
 
     sub = submatrix(m, row, col);
     if(!sub)
@@ -80,12 +80,12 @@ float minor(t_matrix m, int row, int col)
     return(det);
 }
 
-float cofactor(t_matrix m, int row, int col)
+double cofactor(t_matrix m, int row, int col)
 {
-    float min;
+    double min;
 
     min = minor(m, row, col);
-    if((row + col) % 2 != 0 && !is_equal_f(min, 0))
+    if((row + col) % 2 != 0 && !is_equal_d(min, 0))
         min = -1 * min;
     return (min);
 }

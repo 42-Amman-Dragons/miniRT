@@ -12,7 +12,7 @@
 
 #include "minirt.h"
 
-t_matrix *create_shear(float xy, float xz, float yx, float yz, float zx, float zy)
+t_matrix *create_shear(double xy, double xz, double yx, double yz, double zx, double zy)
 {
     t_matrix *result;
 

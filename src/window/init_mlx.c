@@ -39,6 +39,7 @@ int	init_mlx(t_rt *rt)
 
 void	cleanup_rt(t_rt *rt)
 {
+	free_objects(&rt->scene.objects);
 	if (rt->img)
 		mlx_destroy_image(rt->mlx, rt->img);
 	if (rt->win)

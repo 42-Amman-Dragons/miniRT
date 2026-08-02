@@ -21,13 +21,9 @@ int	main(int argc, char **argv)
 		write(2, "Error\nusage: ./miniRT <scene.rt>\n", 33);
 		return (1);
 	}
-	rt.scene.objects = NULL;
-	rt.scene.has_ambient = 0;
-	rt.scene.has_camera = 0;
-	rt.scene.has_light = 0;
-	(void)argv;
-	// if (parse_scene(argv[1], &rt.scene))
-	// 	return (1);
+	ft_bzero(&rt.scene, sizeof(t_scene));
+	if (parse_scene(argv[1], &rt.scene))
+		return (1);
 	if (init_mlx(&rt))
 	{
 		cleanup_rt(&rt);

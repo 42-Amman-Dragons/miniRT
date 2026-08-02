@@ -46,21 +46,46 @@ int	parse_line(char *line, t_scene *scene)
 
 int	parse_ambient(char **tokens, t_scene *scene)
 {
-	(void)tokens;
-	(void)scene;
+	if (count_tokens(tokens) != 3)
+		return (rt_error("A takes a ratio and a colour"));
+	if (scene->has_ambient)
+		return (rt_error("duplicate ambient lighting (A)"));
+	if (parse_range(tokens[1], &scene->ambient.ratio, 0.0, 1.0))
+		return (rt_error("the ambient ratio must be in [0.0,1.0]"));
+	if (parse_color(tokens[2], &scene->ambient.color))
+		return (rt_error("the ambient colour must be R,G,B in [0,255]"));
+	scene->has_ambient = 1;
 	return (0);
 }
 
 int	parse_camera(char **tokens, t_scene *scene)
 {
-	(void)tokens;
-	(void)scene;
+	if (count_tokens(tokens) != 4)
+		return (rt_error("C takes a position, an orientation and a FOV"));
+	if (scene->has_camera)
+		return (rt_error("duplicate camera (C)"));
+	if (parse_point(tokens[1], &scene->camera.origin))
+		return (rt_error("the camera position must be x,y,z"));
+	if (parse_orientation(tokens[2], &scene->camera.dir))
+		return (rt_error("the camera orientation must be a normalised vector"));
+	if (parse_range(tokens[3], &scene->camera.fov, 0.0, 180.0))
+		return (rt_error("the camera FOV must be in [0,180]"));
+	scene->has_camera = 1;
 	return (0);
 }
 
 int	parse_light(char **tokens, t_scene *scene)
 {
-	(void)tokens;
-	(void)scene;
+	if (count_tokens(tokens) != 4)
+		return (rt_error("L takes a position, a brightness and a colour"));
+	if (scene->has_light)
+		return (rt_error("duplicate light (L)"));
+	if (parse_point(tokens[1], &scene->light.pos))
+		return (rt_error("the light position must be x,y,z"));
+	if (parse_range(tokens[2], &scene->light.brightness, 0.0, 1.0))
+		return (rt_error("the light brightness must be in [0.0,1.0]"));
+	if (parse_color(tokens[3], &scene->light.color))
+		return (rt_error("the light colour must be R,G,B in [0,255]"));
+	scene->has_light = 1;
 	return (0);
 }

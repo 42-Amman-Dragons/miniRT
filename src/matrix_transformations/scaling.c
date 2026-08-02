@@ -12,7 +12,7 @@
 
 #include "minirt.h"
 
-t_matrix *create_scaling(float x, float y, float z)
+t_matrix *create_scaling(double x, double y, double z)
 {
     t_matrix *result;
 

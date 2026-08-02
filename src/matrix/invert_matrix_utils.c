@@ -36,7 +36,7 @@ t_matrix *create_cofactor_matrix(t_matrix m)
     return (result);
 }
 
-t_matrix *divide_matrix_by(t_matrix m, float num)
+t_matrix *divide_matrix_by(t_matrix m, double num)
 {
     t_matrix *result;
     int i;

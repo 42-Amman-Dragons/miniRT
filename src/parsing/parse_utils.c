@@ -31,3 +31,22 @@ void	free_objects(t_object **head)
 		*head = next;
 	}
 }
+
+int	append_object(t_object **head, t_object *obj)
+{
+	t_object	*node;
+	t_object	*cur;
+
+	node = malloc(sizeof(t_object));
+	if (!node)
+		return (1);
+	*node = *obj;
+	node->next = NULL;
+	if (!*head)
+		return (*head = node, 0);
+	cur = *head;
+	while (cur->next)
+		cur = cur->next;
+	cur->next = node;
+	return (0);
+}

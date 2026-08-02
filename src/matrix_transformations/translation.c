@@ -12,7 +12,7 @@
 
 #include "minirt.h"
 
-t_matrix *create_translation(float x, float y, float z)
+t_matrix *create_translation(double x, double y, double z)
 {
     t_matrix *result;
 

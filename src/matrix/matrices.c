@@ -16,7 +16,7 @@ t_matrix *create_identity(int num)
 {
     int i;
     int j;
-    float values[num * num];
+    double values[num * num];
 
     if (num == 0)
         return(NULL);

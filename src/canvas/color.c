@@ -12,7 +12,7 @@
 
 #include "minirt.h"
 
-t_color new_color(float red, float green, float blue)
+t_color new_color(double red, double green, double blue)
 {
     return ((t_color){red, green, blue});
 }

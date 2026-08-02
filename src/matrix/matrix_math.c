@@ -24,7 +24,7 @@ int is_equal_matrix(t_matrix t1, t_matrix t2)
     {
         while(c < t1.col)
         {
-            if(!is_equal_f(t1.data[r][c] ,t2.data[r][c]))
+            if(!is_equal_d(t1.data[r][c] ,t2.data[r][c]))
                 return (0);
             c++;
         }
@@ -34,13 +34,13 @@ int is_equal_matrix(t_matrix t1, t_matrix t2)
 }
 
 
-float **mult_data(t_matrix m1, t_matrix m2)
+double **mult_data(t_matrix m1, t_matrix m2)
 {
-    float **data;
+    double **data;
     int row;
     int col;
     int i;
-    float sum;
+    double sum;
 
     data = create_empty_data(m2.col, m1.row);
     if(!data)
@@ -99,7 +99,7 @@ t_tuple multi_matrix_tuple(t_matrix m, t_tuple t)
 
     if(m.col != 4)
         return ((t_tuple){0,0,0,0});
-    n = new_matrix((float[]){t.x, t.y,t.z,t.w}, 1, 4);
+    n = new_matrix((double[]){t.x, t.y,t.z,t.w}, 1, 4);
     if(!n)
         return ((t_tuple){0,0,0,0});
     result = multi_matrix(m, *n);
