@@ -16,7 +16,8 @@ LIBS		= $(LIBFT) -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 SRC_DIR		= src
 OBJ_DIR		= obj
 
-CANVAS_DIR = canvas
+COLOR_DIR = color
+RAY_DIR = ray_sphere
 TUPLES_DIR = tuples
 MATRIX_DIR = matrix
 MATRIX_TRANS_DIR = matrix_transformations
@@ -31,10 +32,12 @@ SRC			= main.c \
 			  parsing/parse_elements.c \
 			  parsing/parse_objects.c \
 			  window/init_mlx.c \
-			  window/hooks.c
+			  window/hooks.c \
+			  window/pexils_to_image.c
 
 TUPLES_SRC = tuple.c tuple_utils.c print_utils.c tuple_math1.c vector_math1.c
-CANVAS_SRC = color.c color_math.c canvas.c
+COLOR_SRC = color.c color_math.c
+RAY_SRC = ray.c sphere.c intersections_mangement.c hit.c
 MATRIX_SRC = matrix.c matrix_math.c matrices.c invert_matrix.c invert_matrix_utils.c
 MATRIX_TRANS_SRC = translation.c scaling.c rotation.c shearing.c
 
@@ -42,7 +45,8 @@ OBJ			= $(SRC:%.c=$(OBJ_DIR)/%.o) \
 $(addprefix $(OBJ_DIR)/$(TUPLES_DIR)/, $(TUPLES_SRC:.c=.o)) \
 $(addprefix $(OBJ_DIR)/$(MATRIX_DIR)/, $(MATRIX_SRC:.c=.o)) \
 $(addprefix $(OBJ_DIR)/$(MATRIX_TRANS_DIR)/, $(MATRIX_TRANS_SRC:.c=.o)) \
-$(addprefix $(OBJ_DIR)/$(CANVAS_DIR)/, $(CANVAS_SRC:.c=.o))
+$(addprefix $(OBJ_DIR)/$(COLOR_DIR)/, $(COLOR_SRC:.c=.o)) \
+$(addprefix $(OBJ_DIR)/$(RAY_DIR)/, $(RAY_SRC:.c=.o))
 
 all: $(NAME)
 
@@ -66,8 +70,12 @@ $(OBJ_DIR)/$(TUPLES_DIR)/%.o: $(SRC_DIR)/$(TUPLES_DIR)/%.c includes/minirt.h
 	mkdir -p $(OBJ_DIR)/$(TUPLES_DIR)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
-$(OBJ_DIR)/$(CANVAS_DIR)/%.o: $(SRC_DIR)/$(CANVAS_DIR)/%.c includes/minirt.h
-	mkdir -p $(OBJ_DIR)/$(CANVAS_DIR)
+$(OBJ_DIR)/$(COLOR_DIR)/%.o: $(SRC_DIR)/$(COLOR_DIR)/%.c includes/minirt.h
+	mkdir -p $(OBJ_DIR)/$(COLOR_DIR)
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
+$(OBJ_DIR)/$(RAY_DIR)/%.o: $(SRC_DIR)/$(RAY_DIR)/%.c includes/minirt.h
+	mkdir -p $(OBJ_DIR)/$(RAY_DIR)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 $(OBJ_DIR)/$(MATRIX_DIR)/%.o: $(SRC_DIR)/$(MATRIX_DIR)/%.c includes/minirt.h

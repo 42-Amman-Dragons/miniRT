@@ -43,19 +43,30 @@ typedef struct s_tuple
 	double			w;
 }					t_tuple;
 
+typedef struct s_ray
+{
+	t_tuple			origin;
+	t_tuple			direction;
+}					t_ray;
+
+typedef struct s_intersection
+{
+	double			t;
+	void			*object;
+}					t_intersection;
+
+typedef struct s_intersections
+{
+	int				count;
+	t_intersection	*items;
+}					t_intersections;
+
 typedef struct s_color
 {
 	double			r;
 	double			g;
 	double			b;
 }					t_color;
-
-typedef struct s_canvas
-{
-	int				width;
-	int				height;
-	t_color			*pixels;
-}					t_canvas;
 
 typedef struct s_matrix
 {
@@ -152,6 +163,7 @@ typedef struct s_rt
 int					init_mlx(t_rt *rt);
 void				cleanup_rt(t_rt *rt);
 int					close_rt(t_rt *rt);
+void				put_pixel_to_image(t_rt *rt, int x, int y, t_color color);
 
 int					on_key(int keycode, t_rt *rt);
 int					on_destroy(t_rt *rt);
@@ -208,24 +220,33 @@ t_tuple				normalize_vector(t_tuple vector);
 double				dot_product(t_tuple t1, t_tuple t2);
 t_tuple				cross_product(t_tuple t1, t_tuple t2);
 
+// ray sphere
+t_ray				new_ray(t_tuple position, t_tuple direction);
+t_tuple				position(t_ray ray, double distance);
+t_sphere			new_sphere(t_tuple center, double radius);
+t_intersections		*intersect(t_sphere *sphere, t_ray ray);
+t_intersection		new_intersection(double distance, void *object);
+t_intersections		*new_intersections(void);
+void				append_intrsection(t_intersections *intersections,
+						t_intersection new);
+void				free_intersections(t_intersections *intersections);
+t_intersection		*hit(t_intersections *intersections);
+
 //tuple_utils.c
 int					is_equal_d(double a, double b);
 
 // print utils
 int					print_error_return(char *msg, int err);
 
-// canvas
+// color
 t_color				new_color(double red, double green, double blue);
+unsigned int		color_to_rgb(t_color color);
+t_color				rgb_to_color(unsigned int rgb);
 t_color				add_colors(t_color c1, t_color c2);
 t_color				sub_colors(t_color c1, t_color c2);
 t_color				scale_color(t_color t, double scalar);
 t_color				divide_color(t_color t, double num);
 t_color				mult_color(t_color c1, t_color c2);
-t_canvas			*new_canvas(int width, int height);
-void				free_canvas(t_canvas *canvas);
-void				write_pixel(t_canvas *canvas, int x, int y, t_color color);
-t_color				get_pixel(t_canvas *canvas, int x, int y);
-
 // matrix
 t_matrix			*new_matrix(double *values, int col, int row);
 void				free_matrix(t_matrix *m);

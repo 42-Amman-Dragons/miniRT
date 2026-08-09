@@ -6,11 +6,60 @@
 /*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/01 15:22:22 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/01 20:32:24 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/08/09 13:53:30 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+/*
+This is just for quick testing
+To be removed once all the values from the input re working
+*/
+static t_ray	ray_for_pixel(int x, int y)
+{
+	t_tuple	camera;
+	t_tuple	wall_point;
+	double	pixel_size;
+	double	half_width;
+	double	half_height;
+
+	camera = new_point(0.0, 0.0, -5.0);
+	pixel_size = 7.0 / (double)WIN_H;
+	half_width = pixel_size * (double)WIN_W / 2.0;
+	half_height = pixel_size * (double)WIN_H / 2.0;
+	wall_point = new_point(-half_width + (x + 0.5) * pixel_size, half_height
+			- (y + 0.5) * pixel_size, 10.0);
+	return (new_ray(camera, normalize_vector(sub_tuples(wall_point, camera))));
+}
+
+static void	render_test_sphere(t_rt *rt)
+{
+	t_sphere		sphere;
+	t_intersections	*xs;
+	t_color			color;
+	int				x;
+	int				y;
+
+	sphere = new_sphere(new_point(0.5, 0.0, 0.0), 2.0);
+	color = new_color(1.0, 0.0, 0.0);
+	y = 0;
+	while (y < WIN_H)
+	{
+		x = 0;
+		while (x < WIN_W)
+		{
+			xs = intersect(&sphere, ray_for_pixel(x, y));
+			if (hit(xs))
+				put_pixel_to_image(rt, x, y, color);
+			free_intersections(xs);
+			x++;
+		}
+		y++;
+	}
+}
+
+/*--------------------------------------*/
 
 int	main(int argc, char **argv)
 {
@@ -30,6 +79,7 @@ int	main(int argc, char **argv)
 		write(2, "Error\nmlx initialisation failed\n", 32);
 		return (1);
 	}
+	render_test_sphere(&rt);
 	mlx_put_image_to_window(rt.mlx, rt.win, rt.img, 0, 0);
 	mlx_loop(rt.mlx);
 	return (0);

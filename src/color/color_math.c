@@ -12,47 +12,48 @@
 
 #include "minirt.h"
 
-t_color add_colors(t_color c1, t_color c2)
+t_color	add_colors(t_color c1, t_color c2)
 {
-    return ((t_color){
-        c1.r + c2.r,
-        c1.g + c2.g,
-        c1.b + c2.b
-    });
+	return ((t_color){
+		c1.r + c2.r,
+		c1.g + c2.g,
+		c1.b + c2.b
+	});
 }
 
-t_color sub_colors(t_color c1, t_color c2)
+t_color	sub_colors(t_color c1, t_color c2)
 {
-    return ((t_color){
-        c1.r - c2.r,
-        c1.g - c2.g,
-        c1.b - c2.b
-    });
+	return ((t_color){
+		c1.r - c2.r,
+		c1.g - c2.g,
+		c1.b - c2.b
+	});
 }
 
-t_color scale_color(t_color c, double scalar)
+t_color	scale_color(t_color c, double scalar)
 {
-    return ((t_color){
-        c.r * scalar,
-        c.g * scalar,
-        c.b * scalar
-    });
+	return ((t_color){
+		c.r * scalar,
+		c.g * scalar,
+		c.b * scalar
+	});
 }
 
-t_color divide_color(t_color c, double num)
+t_color	divide_color(t_color c, double num)
 {
-    return ((t_color){
-        c.r / num,
-        c.g / num,
-        c.b / num
-    });
+	return ((t_color){
+		c.r / num,
+		c.g / num,
+		c.b / num
+	});
 }
 
-t_color mult_color(t_color c1, t_color c2)
+t_color	mult_color(t_color c1, t_color c2)
 {
-    return ((t_color){
-        c1.r * c2.r,
-        c1.g * c2.g,
-        c1.b * c2.b
-    });
+	t_color	color;
+
+	color.r = c1.r * c2.r;
+	color.g = c1.g * c2.g;
+	color.b = c1.b * c2.b;
+	return (color);
 }
