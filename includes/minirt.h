@@ -21,9 +21,9 @@
 # include "mlx.h"
 # include <fcntl.h>
 # include <math.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <stdio.h>
 
 # define WIN_W 800
 # define WIN_H 600
@@ -84,12 +84,12 @@ typedef enum e_obj_type
 
 typedef struct s_material
 {
-    t_color color;
-    float ambient;
-    float diffuse;
-    float specular;
-    float shininess;
-} t_material;
+	t_color			color;
+	float			ambient;
+	float			diffuse;
+	float			specular;
+	float			shininess;
+}					t_material;
 
 typedef struct s_sphere
 {
@@ -242,7 +242,7 @@ void				append_intrsection(t_intersections *intersections,
 void				free_intersections(t_intersections *intersections);
 t_intersection		*hit(t_intersections *intersections);
 
-//tuple_utils.c
+// tuple_utils.c
 int					is_equal_d(double a, double b);
 
 // print utils
@@ -288,10 +288,12 @@ t_matrix			*create_shear(double xy, double xz, double yx, double yz,
 						double zx, double zy);
 
 // Lightning and shading
-t_tuple normal_at(t_sphere s, t_tuple point);
-t_tuple reflect(t_tuple in, t_tuple normal);
-t_light point_light(t_tuple position, float brightness, t_color color);
-t_color lighting(t_material material, t_light light, t_tuple point, t_tuple eyev, t_tuple normal);
-t_material material();
+t_tuple				normal_at(t_sphere s, t_tuple point);
+t_tuple				reflect(t_tuple in, t_tuple normal);
+t_light				point_light(t_tuple position, float brightness,
+						t_color color);
+t_color				lighting(t_material material, t_light light, t_tuple point,
+						t_tuple eyev, t_tuple normal);
+t_material			material(void);
 
 #endif
