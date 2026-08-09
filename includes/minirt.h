@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/01 15:22:22 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/02 15:10:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/08/09 16:22:07 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@
 # include "mlx.h"
 # include <fcntl.h>
 # include <math.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <stdio.h>
 
 # define WIN_W 800
 # define WIN_H 600
@@ -82,10 +82,20 @@ typedef enum e_obj_type
 	OBJ_CYLINDER
 }					t_obj_type;
 
+typedef struct s_material
+{
+	t_color			color;
+	float			ambient;
+	float			diffuse;
+	float			specular;
+	float			shininess;
+}					t_material;
+
 typedef struct s_sphere
 {
 	t_tuple			center;
 	double			radius;
+	t_material		material;
 }					t_sphere;
 
 typedef struct s_plane
@@ -232,7 +242,7 @@ void				append_intrsection(t_intersections *intersections,
 void				free_intersections(t_intersections *intersections);
 t_intersection		*hit(t_intersections *intersections);
 
-//tuple_utils.c
+// tuple_utils.c
 int					is_equal_d(double a, double b);
 
 // print utils
@@ -276,5 +286,14 @@ t_matrix			*rotation_y(double radians);
 t_matrix			*rotation_z(double radians);
 t_matrix			*create_shear(double xy, double xz, double yx, double yz,
 						double zx, double zy);
+
+// Lightning and shading
+t_tuple				normal_at(t_sphere s, t_tuple point);
+t_tuple				reflect(t_tuple in, t_tuple normal);
+t_light				point_light(t_tuple position, float brightness,
+						t_color color);
+t_color				lighting(t_material material, t_light light, t_tuple point,
+						t_tuple eyev, t_tuple normal);
+t_material			material(void);
 
 #endif
