@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/09 15:17:56 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/08/09 16:38:33 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/08/10 11:08:39 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,5 @@ t_tuple	world_normal(t_sphere s, t_tuple point, t_matrix inverse)
 
 t_tuple	normal_at(t_sphere s, t_tuple point)
 {
-	t_tuple		word_normal;
-	t_matrix	*identity;
-	t_matrix	*m;
-
-	identity = create_identity(4);
-	m = invert_matrix(*identity);
-	word_normal = world_normal(s, point, *m);
-	free_matrix(identity);
-	free_matrix(m);
-	return (normalize_vector(word_normal));
+	return (normalize_vector(sub_tuples(point, s.center)));
 }

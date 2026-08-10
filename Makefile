@@ -22,6 +22,7 @@ TUPLES_DIR = tuples
 MATRIX_DIR = matrix
 MATRIX_TRANS_DIR = matrix_transformations
 LIGHT_SHADING_DIR = light
+PLANE_DIR = plane
 
 SRC			= main.c \
 			  parsing/parse.c \
@@ -42,6 +43,7 @@ RAY_SRC = ray.c sphere.c intersections_mangement.c hit.c
 MATRIX_SRC = matrix.c matrix_math.c matrices.c invert_matrix.c invert_matrix_utils.c
 MATRIX_TRANS_SRC = translation.c scaling.c rotation.c shearing.c
 LIGHT_SHADING_SRC = normals.c reflect.c light.c material.c
+PLANE_SRC = plane.c
 
 OBJ			= $(SRC:%.c=$(OBJ_DIR)/%.o) \
 $(addprefix $(OBJ_DIR)/$(TUPLES_DIR)/, $(TUPLES_SRC:.c=.o)) \
@@ -49,7 +51,8 @@ $(addprefix $(OBJ_DIR)/$(MATRIX_DIR)/, $(MATRIX_SRC:.c=.o)) \
 $(addprefix $(OBJ_DIR)/$(MATRIX_TRANS_DIR)/, $(MATRIX_TRANS_SRC:.c=.o)) \
 $(addprefix $(OBJ_DIR)/$(COLOR_DIR)/, $(COLOR_SRC:.c=.o)) \
 $(addprefix $(OBJ_DIR)/$(RAY_DIR)/, $(RAY_SRC:.c=.o)) \
-$(addprefix $(OBJ_DIR)/$(LIGHT_SHADING_DIR)/, $(LIGHT_SHADING_SRC:.c=.o))
+$(addprefix $(OBJ_DIR)/$(LIGHT_SHADING_DIR)/, $(LIGHT_SHADING_SRC:.c=.o)) \
+$(addprefix $(OBJ_DIR)/$(PLANE_DIR)/, $(PLANE_SRC:.c=.o))
 
 all: $(NAME)
 
@@ -91,6 +94,10 @@ $(OBJ_DIR)/$(MATRIX_TRANS_DIR)/%.o: $(SRC_DIR)/$(MATRIX_TRANS_DIR)/%.c includes/
 
 $(OBJ_DIR)/$(LIGHT_SHADING_DIR)/%.o: $(SRC_DIR)/$(LIGHT_SHADING_DIR)/%.c
 	mkdir -p $(OBJ_DIR)/$(LIGHT_SHADING_DIR)
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
+$(OBJ_DIR)/$(PLANE_DIR)/%.o: $(SRC_DIR)/$(PLANE_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(PLANE_DIR)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 bonus: all
