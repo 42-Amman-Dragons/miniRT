@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/01 15:22:22 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/09 16:22:07 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/08/10 11:07:16 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ typedef enum e_obj_type
 typedef struct s_material
 {
 	t_color			color;
-	float			ambient;
 	float			diffuse;
 	float			specular;
 	float			shininess;
@@ -102,6 +101,7 @@ typedef struct s_plane
 {
 	t_tuple			point;
 	t_tuple			normal;
+	t_material		material;
 }					t_plane;
 
 typedef struct s_cylinder
@@ -233,7 +233,7 @@ t_tuple				cross_product(t_tuple t1, t_tuple t2);
 // ray sphere
 t_ray				new_ray(t_tuple position, t_tuple direction);
 t_tuple				position(t_ray ray, double distance);
-t_sphere			new_sphere(t_tuple center, double radius);
+t_sphere			new_sphere(t_tuple center, double radius, t_color color);
 t_intersections		*intersect(t_sphere *sphere, t_ray ray);
 t_intersection		new_intersection(double distance, void *object);
 t_intersections		*new_intersections(void);
@@ -292,8 +292,13 @@ t_tuple				normal_at(t_sphere s, t_tuple point);
 t_tuple				reflect(t_tuple in, t_tuple normal);
 t_light				point_light(t_tuple position, float brightness,
 						t_color color);
-t_color				lighting(t_material material, t_light light, t_tuple point,
-						t_tuple eyev, t_tuple normal);
+t_color				lighting(t_material material, t_light light, t_ambient ambient, t_tuple point,
+					t_tuple eyev, t_tuple normal);
 t_material			material(void);
+
+
+// plane 
+t_plane				new_plane(t_tuple point, t_tuple normal, t_color color);
+t_intersections		*intersect_plane(t_plane plane, t_ray ray);
 
 #endif

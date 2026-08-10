@@ -6,15 +6,19 @@
 /*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/09 00:00:00 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/08/09 15:32:39 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/08/10 10:46:46 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-t_sphere	new_sphere(t_tuple center, double radius)
+t_sphere	new_sphere(t_tuple center, double radius, t_color color)
 {
-	return ((t_sphere){center, radius, material()});
+	t_material m;
+    
+    m = material();
+    m.color = color;
+	return ((t_sphere){center, radius, m});
 }
 
 static t_intersections	*calc_intersections(double a, double b,
