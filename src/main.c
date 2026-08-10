@@ -85,9 +85,10 @@ static void	render_test_sphere2(t_rt *rt)
 	int				x;
 	int				y;
 
-	sphere = new_sphere(new_point(0.5, 0.0, 0.0), 2.0);
-	sphere.material.color = new_color(1,0,0);
-	light = add_light_source(rt);
+	sphere = new_sphere(new_point(0.0, 0.0, 0.0), 1.0);
+	sphere.material.color = new_color(1.0, 0.0, 0.0);
+	light = point_light(new_point(0.0, 0.0, -10.0), 1.0,
+			new_color(1.0, 1.0, 1.0));
 	y = 0;
 	while (y < WIN_H)
 	{
@@ -100,7 +101,7 @@ static void	render_test_sphere2(t_rt *rt)
 			if (h)
 			{
 				point = position(ray, h->t);
-				eyev = sub_tuples(point, ray.origin);
+				eyev = negate_tuple(ray.direction);
 				normal = normal_at(sphere, point);
 				color = lighting(sphere.material, light, point, eyev, normal);
 				put_pixel_to_image(rt, x, y, color);

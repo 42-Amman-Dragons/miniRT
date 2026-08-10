@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why a Sphere Normal Does Not Need a Matrix</title>
+  <style>
+    :root {
+      --ink: #17221d;
+      --muted: #5d6d64;
+      --paper: #f5f0e5;
+      --card: #fffdf7;
+      --green: #156b52;
+      --green-soft: #dcebe3;
+      --orange: #d26935;
+      --orange-soft: #fae5d8;
+      --line: #d7d0c1;
+      --code: #17241f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 0%, #fff9e9 0, transparent 30rem),
+        var(--paper);
+      font: 17px/1.65 Georgia, "Times New Roman", serif;
+    }
+
+    main {
+      width: min(1080px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 64px 0 80px;
+    }
+
+    header {
+      max-width: 820px;
+      margin-bottom: 48px;
+    }
+
+    .eyebrow {
+      color: var(--orange);
+      font: 700 0.78rem/1.2 Arial, sans-serif;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 { line-height: 1.15; }
+
+    h1 {
+      margin: 12px 0 18px;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      letter-spacing: -0.045em;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      letter-spacing: -0.025em;
+    }
+
+    h3 { font-size: 1.15rem; }
+
+    .lead {
+      color: var(--muted);
+      font-size: 1.25rem;
+      max-width: 720px;
+    }
+
+    .answer {
+      padding: 24px 28px;
+      border-left: 6px solid var(--green);
+      background: var(--green-soft);
+      font-size: 1.2rem;
+    }
+
+    section { margin-top: 56px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+      box-shadow: 0 12px 36px rgba(44, 41, 31, 0.06);
+    }
+
+    .card > :first-child { margin-top: 0; }
+    .card > :last-child { margin-bottom: 0; }
+
+    code, pre {
+      font-family: "Courier New", Courier, monospace;
+    }
+
+    code {
+      padding: 0.1em 0.3em;
+      border-radius: 4px;
+      background: #ebe7dc;
+      font-size: 0.9em;
+    }
+
+    pre {
+      overflow-x: auto;
+      margin: 18px 0 0;
+      padding: 20px;
+      border-radius: 10px;
+      color: #eaf5ee;
+      background: var(--code);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    pre code { padding: 0; background: none; }
+
+    .formula {
+      margin: 20px 0;
+      padding: 18px;
+      border: 1px dashed var(--green);
+      border-radius: 10px;
+      color: var(--green);
+      background: #f7fbf8;
+      text-align: center;
+      font: 700 1.2rem/1.5 "Courier New", monospace;
+    }
+
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 22px;
+      font: 700 0.88rem/1.3 Arial, sans-serif;
+    }
+
+    .flow span {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--card);
+    }
+
+    .flow b { color: var(--orange); }
+
+    .bad { border-top: 5px solid var(--orange); }
+    .good { border-top: 5px solid var(--green); }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 999px;
+      color: var(--green);
+      background: var(--green-soft);
+      font: 700 0.72rem/1 Arial, sans-serif;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .diagram {
+      display: grid;
+      place-items: center;
+      min-height: 330px;
+    }
+
+    svg { width: min(100%, 430px); height: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+    }
+
+    th, td {
+      padding: 15px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font: 700 0.78rem/1.3 Arial, sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .warning {
+      padding: 20px 24px;
+      border-radius: 10px;
+      background: var(--orange-soft);
+    }
+
+    footer {
+      margin-top: 64px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 760px) {
+      main { padding-top: 36px; }
+      .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 2.7rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow">miniRT geometry note</div>
+      <h1>Why the sphere normal needs no matrix</h1>
+      <p class="lead">
+        The old implementation created an identity matrix, inverted it,
+        transposed it, multiplied tuples by it, and freed several allocations
+        for every visible pixel. In this project, all of that work returns the
+        same direction as one subtraction. The book uses those operations for
+        a valid reason—but it uses a different way of representing shapes.
+      </p>
+    </header>
+
+    <div class="answer">
+      <strong>Short answer:</strong> the sphere is already stored in world
+      space as a center and radius. At surface point <code>P</code>, its outward
+      normal is simply <code>normalize(P - center)</code>.
+    </div>
+
+    <section class="grid">
+      <div class="card">
+        <span class="tag">Current representation</span>
+        <h2>What the sphere knows</h2>
+        <pre><code>typedef struct s_sphere
+{
+    t_tuple     center;
+    double      radius;
+    t_material  material;
+} t_sphere;</code></pre>
+        <p>
+          The center is already the sphere's final location in the scene. The
+          radius is already its final size. There is no object-to-world matrix
+          stored here, so there is no transform to undo.
+        </p>
+      </div>
+
+      <div class="card diagram" aria-label="Sphere normal diagram">
+        <svg viewBox="0 0 430 330" role="img">
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8"
+              refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#d26935"/>
+            </marker>
+          </defs>
+          <circle cx="190" cy="180" r="112" fill="#dcebe3"
+            stroke="#156b52" stroke-width="4"/>
+          <circle cx="190" cy="180" r="6" fill="#17221d"/>
+          <circle cx="279" cy="112" r="7" fill="#d26935"/>
+          <line x1="190" y1="180" x2="279" y2="112"
+            stroke="#d26935" stroke-width="5" marker-end="url(#arrow)"/>
+          <line x1="279" y1="112" x2="350" y2="58"
+            stroke="#d26935" stroke-width="4" stroke-dasharray="8 7"
+            marker-end="url(#arrow)"/>
+          <text x="171" y="205" fill="#17221d" font-size="20">C</text>
+          <text x="289" y="111" fill="#17221d" font-size="20">P</text>
+          <text x="215" y="166" fill="#d26935" font-size="17">P - C</text>
+          <text x="315" y="92" fill="#d26935" font-size="17">normal</text>
+        </svg>
+      </div>
+    </section>
+
+    <section>
+      <h2>The geometry</h2>
+      <p>
+        A sphere contains all points whose distance from its center
+        <code>C</code> equals its radius <code>r</code>:
+      </p>
+      <div class="formula">|P - C|² = r²</div>
+      <p>
+        The vector <code>P - C</code> starts at the center and points through
+        the surface. It is perpendicular to the sphere at <code>P</code>, which
+        is exactly what a surface normal means. Its length is the radius, so we
+        normalize it to length one:
+      </p>
+      <div class="formula">N = normalize(P - C)</div>
+      <p>
+        Another derivation uses the gradient of
+        <code>F(P) = |P - C|² - r²</code>. Its gradient is
+        <code>2(P - C)</code>. Normalization removes the factor of two, giving
+        the same result. The radius does not appear in the final code because
+        normalization also removes the vector's original length.
+      </p>
+    </section>
+
+    <section>
+      <h2>Old work versus necessary work</h2>
+      <div class="grid">
+        <article class="card bad">
+          <h3>Identity-matrix path</h3>
+          <div class="flow">
+            <span>Create I</span><b>→</b><span>Invert I</span><b>→</b>
+            <span>Transform P</span><b>→</b><span>Subtract C</span><b>→</b>
+            <span>Transpose I</span><b>→</b><span>Transform N</span><b>→</b>
+            <span>Normalize</span>
+          </div>
+          <p>
+            Because the matrix is the identity,
+            <code>I⁻¹ = I</code> and <code>I⁻ᵀ = I</code>. Multiplication by it
+            changes nothing. Every allocation, inversion, transpose, and free
+            is therefore overhead.
+          </p>
+        </article>
+
+        <article class="card good">
+          <h3>Direct world-space path</h3>
+          <div class="flow">
+            <span>Subtract C from P</span><b>→</b><span>Normalize</span>
+          </div>
+          <pre><code>t_tuple normal_at(t_sphere sphere, t_tuple point)
+{
+    return (normalize_vector(
+        sub_tuples(point, sphere.center)));
+}</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>A numerical example</h2>
+      <div class="card">
+        <p>
+          Let the center be <code>C = (1, 2, 3)</code> and a surface point be
+          <code>P = (1, 5, 7)</code>. Then:
+        </p>
+        <div class="formula">
+          P - C = (0, 3, 4)<br>
+          |P - C| = 5<br>
+          N = (0, 3/5, 4/5) = (0, 0.6, 0.8)
+        </div>
+        <p>
+          The radius happens to be five, but it is not needed explicitly. The
+          length of <code>P - C</code> already contains that information, and
+          normalization removes it.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <div class="eyebrow">The book's design</div>
+      <h2>Why <em>The Ray Tracer Challenge</em> needs matrices</h2>
+      <p>
+        In the book, every sphere begins as one canonical object: a unit sphere
+        centered at the object-space origin. Its equation is always
+        <code>x² + y² + z² = 1</code>. A transformation matrix <code>M</code>
+        then tells the renderer how that canonical sphere appears in the world.
+      </p>
+      <div class="grid">
+        <article class="card">
+          <h3>Object space</h3>
+          <pre><code>center = (0, 0, 0)
+radius = 1
+
+// Always the same simple sphere</code></pre>
+          <p>
+            Intersection and normal formulas stay simple because every shape
+            is solved in its own local coordinate system.
+          </p>
+        </article>
+        <article class="card">
+          <h3>World space</h3>
+          <pre><code>M = translation * rotation * scaling
+
+// M can move the sphere,
+// resize it, or turn it into an ellipsoid</code></pre>
+          <p>
+            One matrix can describe combinations that a single center and
+            radius cannot, especially non-uniform scaling and shearing.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>The book's complete coordinate-space journey</h2>
+      <div class="flow">
+        <span>World ray</span><b>→ M⁻¹ →</b><span>Object ray</span>
+        <b>→</b><span>Unit-sphere intersection</span><b>→</b>
+        <span>Object point</span><b>→</b><span>Object normal</span>
+        <b>→ M⁻ᵀ →</b><span>World normal</span>
+      </div>
+      <div class="grid" style="margin-top: 22px;">
+        <article class="card">
+          <h3>1. Intersect in object space</h3>
+          <p>
+            The incoming ray is expressed in world coordinates. Multiplying
+            it by <code>M⁻¹</code> reverses the sphere's transformation and
+            moves the ray into the canonical sphere's coordinate system.
+          </p>
+          <pre><code>object_ray = transform(world_ray, inverse(M));
+intersections = intersect_unit_sphere(object_ray);</code></pre>
+        </article>
+        <article class="card">
+          <h3>2. Return the normal to world space</h3>
+          <p>
+            The hit point goes into object space, where the unit-sphere normal
+            is simply <code>object_point - origin</code>. That normal must then
+            return to world space using the inverse transpose.
+          </p>
+          <pre><code>object_point  = inverse(M) * world_point;
+object_normal = object_point - origin;
+world_normal  = transpose(inverse(M)) * object_normal;
+world_normal.w = 0;
+return normalize(world_normal);</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Why not transform the normal with M?</h2>
+      <p>
+        A surface normal must remain perpendicular to every tangent on the
+        surface. If an object-space tangent is <code>T</code>, its world-space
+        version is <code>MT</code>. We need a transformed normal that still has
+        a zero dot product with that tangent.
+      </p>
+      <div class="formula">
+        Nworld = M⁻ᵀ N<br>
+        Nworld · Tworld = (M⁻ᵀN) · (MT) = N · T = 0
+      </div>
+      <p>
+        That is why the transpose is not decorative. With non-uniform scaling,
+        using <code>M</code> directly can tilt the normal away from the true
+        perpendicular direction and produce visibly incorrect lighting.
+      </p>
+    </section>
+
+    <section>
+      <h2>Book sphere versus this miniRT sphere</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Book model</th>
+            <th>Current miniRT model</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Where is the sphere?</td>
+            <td>Encoded in transformation matrix M</td>
+            <td>Stored directly in <code>sphere.center</code></td>
+          </tr>
+          <tr>
+            <td>How large is it?</td>
+            <td>Encoded in M's scaling</td>
+            <td>Stored directly in <code>sphere.radius</code></td>
+          </tr>
+          <tr>
+            <td>Can it become an ellipsoid?</td>
+            <td>Yes, through non-uniform scaling</td>
+            <td>No; one radius always describes a round sphere</td>
+          </tr>
+          <tr>
+            <td>Normal calculation</td>
+            <td>Object normal, then inverse transpose</td>
+            <td><code>normalize(point - center)</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="warning" style="margin-top: 22px;">
+        The book's matrix code is correct for the book's representation. It
+        became unnecessary here only because this project changed the data
+        model from “unit sphere plus transform” to “world-space center plus
+        radius.”
+      </div>
+    </section>
+
+    <section>
+      <h2>When matrices really are needed</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Sphere design</th>
+            <th>Normal calculation</th>
+            <th>Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>World-space center + radius</td>
+            <td><code>normalize(P - C)</code></td>
+            <td>The final position and uniform size are already stored.</td>
+          </tr>
+          <tr>
+            <td>Unit sphere + translation matrix</td>
+            <td>Matrix method is possible but unnecessary</td>
+            <td>Translation can be represented directly by changing C.</td>
+          </tr>
+          <tr>
+            <td>Unit sphere + non-uniform scaling</td>
+            <td>Use the inverse transpose</td>
+            <td>The result is an ellipsoid; direct center/radius is no longer enough.</td>
+          </tr>
+          <tr>
+            <td>General transformed object</td>
+            <td><code>Nworld = transpose(inverse(M)) × Nobject</code></td>
+            <td>Normals must stay perpendicular after scaling and shearing.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Why the inverse transpose exists</h2>
+      <p>
+        A normal is not an ordinary direction vector. Under non-uniform
+        scaling, multiplying it by the object's matrix can make it no longer
+        perpendicular to the surface. Multiplying by the inverse transpose
+        preserves that perpendicular relationship.
+      </p>
+      <div class="warning">
+        That rule is important for transformed ellipsoids and general meshes,
+        but it does not apply to this <code>t_sphere</code>: the structure has
+        no transformation matrix and represents only a round sphere with one
+        uniform radius.
+      </div>
+    </section>
+
+    <section>
+      <h2>Why the old version was slow</h2>
+      <p>
+        Ray tracing calls <code>normal_at()</code> once for every visible hit.
+        At 800 × 600, hundreds of thousands of pixels may hit a large sphere.
+        The old function performed matrix allocations and a full inversion for
+        each one. The direct version uses one subtraction, one magnitude, and
+        one division—without heap allocation.
+      </p>
+      <p>
+        Even in the book's transformed-object design, a production renderer
+        should avoid rebuilding and reinverting an unchanged matrix at every
+        pixel. The transform or its inverse can be stored with the object and
+        reused across rays.
+      </p>
+    </section>
+
+    <footer>
+      <strong>Rule to remember:</strong> choose the normal calculation that
+      matches how the object is stored. World-space center/radius sphere:
+      subtract and normalize. Transformed object-space geometry: transform the
+      point to object space and return the normal with the inverse transpose.
+    </footer>
+  </main>
+</body>
+</html>
