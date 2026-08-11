@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/01 15:22:22 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/10 11:07:16 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/08/11 16:22:23 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,9 @@ typedef struct s_cylinder
 	t_tuple			axis;
 	double			radius;
 	double			height;
+	double			lower_end;
+	double			upper_end;
+	t_material		material;
 }					t_cylinder;
 
 typedef union u_shape
@@ -239,6 +242,8 @@ t_intersection		new_intersection(double distance, void *object);
 t_intersections		*new_intersections(void);
 void				append_intrsection(t_intersections *intersections,
 						t_intersection new);
+void				merge_intersections(t_intersections *result,
+										t_intersections *temp);
 void				free_intersections(t_intersections *intersections);
 t_intersection		*hit(t_intersections *intersections);
 
@@ -288,7 +293,7 @@ t_matrix			*create_shear(double xy, double xz, double yx, double yz,
 						double zx, double zy);
 
 // Lightning and shading
-t_tuple				normal_at(t_sphere s, t_tuple point);
+t_tuple				normal_at(t_sphere sphere, t_tuple point);
 t_tuple				reflect(t_tuple in, t_tuple normal);
 t_light				point_light(t_tuple position, float brightness,
 						t_color color);
@@ -300,5 +305,12 @@ t_material			material(void);
 // plane 
 t_plane				new_plane(t_tuple point, t_tuple normal, t_color color);
 t_intersections		*intersect_plane(t_plane plane, t_ray ray);
+
+// cylinder
+t_cylinder			new_cylinder(t_tuple center, t_tuple axis, double radius, double height);
+t_intersections		*intersect_cylinder(t_cylinder *cyl, t_ray ray);
+t_tuple				cyl_normal_at(t_cylinder cyl, t_tuple point);
+void				ft_swap(double *val1, double *val2);
+int					check_cap(t_cylinder cyl, t_ray ray, double t);
 
 #endif
