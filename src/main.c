@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/01 15:22:22 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/10 11:07:39 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/08/11 16:13:14 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ t_light add_light_source(t_rt *rt)
 // 			{
 // 				point = position(ray, h->t);
 // 				eyev = sub_tuples(point, ray.origin);
-// 				normal = normal_at(sphere, point);
+// 				normal = normal_at(sphere.center, point);
 // 				color = lighting(sphere.material, light, point, eyev, normal);
 // 				put_pixel_to_image(rt, x, y, color);
 // 			}
@@ -112,20 +112,60 @@ t_light add_light_source(t_rt *rt)
 // 	}
 // }
 
-static void	render_test_plane(t_rt *rt)
+// static void	render_test_plane(t_rt *rt)
+// {
+// 	t_plane		plane;
+// 	t_intersections	*xs;
+// 	t_color			color;
+// 	t_light			light;
+// 	t_intersection  *h;
+// 	t_tuple			point;
+// 	t_tuple			eyev;
+// 	t_ray			ray;
+// 	int				x;
+// 	int				y;
+
+// 	plane = new_plane(new_point(0,0,-10), new_vector(0,1,0), new_color(1,0,0));
+// 	light = add_light_source(rt);
+// 	y = 0;
+// 	while (y < WIN_H)
+// 	{
+// 		x = 0;
+// 		while (x < WIN_W)
+// 		{
+// 			ray = ray_for_pixel(x, y);
+// 			xs = intersect_plane(plane, ray);
+// 			h = hit(xs);
+// 			if (h)
+// 			{
+// 				point = position(ray, h->t);
+// 				eyev = sub_tuples(point, ray.origin);
+// 				color = lighting(plane.material, light, rt->scene.ambient , point, eyev, plane.normal);
+// 				put_pixel_to_image(rt, x, y, color);
+// 			}
+// 			free_intersections(xs);
+// 			x++;
+// 		}
+// 		y++;
+// 	}
+// }
+
+static void	render_test_cyl(t_rt *rt)
 {
-	t_plane		plane;
+	t_cylinder		cyl;
 	t_intersections	*xs;
 	t_color			color;
 	t_light			light;
 	t_intersection  *h;
 	t_tuple			point;
 	t_tuple			eyev;
+	t_tuple			normal;
 	t_ray			ray;
 	int				x;
 	int				y;
 
-	plane = new_plane(new_point(0,0,-10), new_vector(0,1,0), new_color(1,0,0));
+	cyl = new_cylinder(new_point( 50.0,0.0,20.6), new_vector(0.0,1.0,0.0), 14.2 /2, 21.42);
+	cyl.material.color = new_color(1,0,0);
 	light = add_light_source(rt);
 	y = 0;
 	while (y < WIN_H)
@@ -134,13 +174,14 @@ static void	render_test_plane(t_rt *rt)
 		while (x < WIN_W)
 		{
 			ray = ray_for_pixel(x, y);
-			xs = intersect_plane(plane, ray);
+			xs = intersect_cylinder(&cyl, ray);
 			h = hit(xs);
 			if (h)
 			{
 				point = position(ray, h->t);
 				eyev = sub_tuples(point, ray.origin);
-				color = lighting(plane.material, light, rt->scene.ambient , point, eyev, plane.normal);
+				normal = cyl_normal_at(cyl, point);
+				color = lighting(cyl.material, light, rt->scene.ambient , point, eyev, normal);
 				put_pixel_to_image(rt, x, y, color);
 			}
 			free_intersections(xs);
@@ -149,6 +190,8 @@ static void	render_test_plane(t_rt *rt)
 		y++;
 	}
 }
+
+
 /*--------------------------------------*/
 
 int	main(int argc, char **argv)
@@ -171,7 +214,8 @@ int	main(int argc, char **argv)
 	}
 	// render_test_sphere(&rt);
 	// render_test_sphere2(&rt);
-	render_test_plane(&rt);
+	// render_test_plane(&rt);
+	render_test_cyl(&rt);
 	mlx_put_image_to_window(rt.mlx, rt.win, rt.img, 0, 0);
 	mlx_loop(rt.mlx);
 	return (0);
