@@ -22,7 +22,7 @@ TUPLES_DIR = tuples
 MATRIX_DIR = matrix
 MATRIX_TRANS_DIR = matrix_transformations
 LIGHT_SHADING_DIR = light
-PLANE_DIR = plane
+OBJECTS_DIR = objects
 CAMERA_DIR = camera
 
 SRC			= main.c \
@@ -45,7 +45,6 @@ MATRIX_SRC = matrix.c matrix_math.c matrices.c invert_matrix.c invert_matrix_uti
 MATRIX_TRANS_SRC = translation.c scaling.c rotation.c shearing.c
 LIGHT_SHADING_SRC = normals.c reflect.c light.c material.c
 PLANE_SRC = plane.c
-CAMERA_SRC = init-camera.c
 
 OBJ			= $(SRC:%.c=$(OBJ_DIR)/%.o) \
 $(addprefix $(OBJ_DIR)/$(TUPLES_DIR)/, $(TUPLES_SRC:.c=.o)) \
@@ -54,7 +53,7 @@ $(addprefix $(OBJ_DIR)/$(MATRIX_TRANS_DIR)/, $(MATRIX_TRANS_SRC:.c=.o)) \
 $(addprefix $(OBJ_DIR)/$(COLOR_DIR)/, $(COLOR_SRC:.c=.o)) \
 $(addprefix $(OBJ_DIR)/$(RAY_DIR)/, $(RAY_SRC:.c=.o)) \
 $(addprefix $(OBJ_DIR)/$(LIGHT_SHADING_DIR)/, $(LIGHT_SHADING_SRC:.c=.o)) \
-$(addprefix $(OBJ_DIR)/$(PLANE_DIR)/, $(PLANE_SRC:.c=.o)) \
+$(addprefix $(OBJ_DIR)/$(OBJECTS_DIR)/, $(OBJECT_SRC:.c=.o)) \
 $(addprefix $(OBJ_DIR)/$(CAMERA_DIR)/, $(CAMERA_SRC:.c=.o))
 
 all: $(NAME)
@@ -99,8 +98,12 @@ $(OBJ_DIR)/$(LIGHT_SHADING_DIR)/%.o: $(SRC_DIR)/$(LIGHT_SHADING_DIR)/%.c
 	mkdir -p $(OBJ_DIR)/$(LIGHT_SHADING_DIR)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
-$(OBJ_DIR)/$(PLANE_DIR)/%.o: $(SRC_DIR)/$(PLANE_DIR)/%.c
-	mkdir -p $(OBJ_DIR)/$(PLANE_DIR)
+$(OBJ_DIR)/$(OBJECTS_DIR)/%.o: $(SRC_DIR)/$(OBJECTS_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(OBJECTS_DIR)
+	$(CC) $(CFLAGS) $(INC) -c $< -o $@
+
+$(OBJ_DIR)/$(CAMERA_DIR)/%.o: $(SRC_DIR)/$(CAMERA_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(CAMERA_DIR)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 $(OBJ_DIR)/$(CAMERA_DIR)/%.o: $(SRC_DIR)/$(CAMERA_DIR)/%.c
