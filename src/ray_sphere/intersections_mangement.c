@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersections_mangement.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/09 13:13:27 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/09 13:13:27 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/08/10 10:37:02 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,20 @@ void	free_intersections(t_intersections *intersections)
 		return ;
 	free(intersections->items);
 	free(intersections);
+}
+
+void	merge_intersections(t_intersections *result, t_intersections *temp)
+{
+    t_intersection	intersection;
+    int	i;
+
+    i = 0;
+    if (!temp)
+        return;
+    while (i < temp->count)
+    {
+        intersection = new_intersection(temp->items[i].t, temp->items[i].object);
+        append_intrsection(result, intersection);
+        i++;
+    }
 }
