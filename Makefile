@@ -34,6 +34,8 @@ SRC			= main.c \
 			  parsing/parse_check.c \
 			  parsing/parse_elements.c \
 			  parsing/parse_objects.c \
+			  render/render.c \
+			  render/object_dispatch.c \
 			  window/init_mlx.c \
 			  window/hooks.c \
 			  window/pexils_to_image.c
@@ -44,7 +46,8 @@ RAY_SRC = ray.c sphere.c intersections_mangement.c hit.c
 MATRIX_SRC = matrix.c matrix_math.c matrices.c invert_matrix.c invert_matrix_utils.c
 MATRIX_TRANS_SRC = translation.c scaling.c rotation.c shearing.c
 LIGHT_SHADING_SRC = normals.c reflect.c light.c material.c
-PLANE_SRC = plane.c
+OBJECT_SRC = plane.c cylinder.c cylinder_normsl_at.c cylinder_utis.c utils.c
+CAMERA_SRC = init-camera.c
 
 OBJ			= $(SRC:%.c=$(OBJ_DIR)/%.o) \
 $(addprefix $(OBJ_DIR)/$(TUPLES_DIR)/, $(TUPLES_SRC:.c=.o)) \
@@ -100,10 +103,6 @@ $(OBJ_DIR)/$(LIGHT_SHADING_DIR)/%.o: $(SRC_DIR)/$(LIGHT_SHADING_DIR)/%.c
 
 $(OBJ_DIR)/$(OBJECTS_DIR)/%.o: $(SRC_DIR)/$(OBJECTS_DIR)/%.c
 	mkdir -p $(OBJ_DIR)/$(OBJECTS_DIR)
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@
-
-$(OBJ_DIR)/$(CAMERA_DIR)/%.o: $(SRC_DIR)/$(CAMERA_DIR)/%.c
-	mkdir -p $(OBJ_DIR)/$(CAMERA_DIR)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 $(OBJ_DIR)/$(CAMERA_DIR)/%.o: $(SRC_DIR)/$(CAMERA_DIR)/%.c

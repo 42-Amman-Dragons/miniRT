@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/01 15:22:22 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/11 16:22:23 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/08/15 13:28:36 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,12 @@ typedef struct s_object
 	struct s_object	*next;
 }					t_object;
 
+typedef struct s_render_hit
+{
+	double			t;
+	t_object		*object;
+}					t_render_hit;
+
 typedef struct s_ambient
 {
 	double			ratio;
@@ -182,6 +188,13 @@ int					init_mlx(t_rt *rt);
 void				cleanup_rt(t_rt *rt);
 int					close_rt(t_rt *rt);
 void				put_pixel_to_image(t_rt *rt, int x, int y, t_color color);
+
+void				render_scene(t_rt *rt);
+t_color				color_at(t_scene *scene, t_ray ray);
+int					closest_object_hit(t_object *objects, t_ray ray,
+						t_render_hit *result);
+t_tuple				object_normal_at(t_object *object, t_tuple point);
+t_material			object_material(t_object *object);
 
 void				init_camera(t_camera *camera);
 t_ray				ray_for_pixel(t_camera *camera, int x, int y);
@@ -251,7 +264,7 @@ t_intersections		*new_intersections(void);
 void				append_intrsection(t_intersections *intersections,
 						t_intersection new);
 void				merge_intersections(t_intersections *result,
-										t_intersections *temp);
+						t_intersections *temp);
 void				free_intersections(t_intersections *intersections);
 t_intersection		*hit(t_intersections *intersections);
 
@@ -305,17 +318,18 @@ t_tuple				normal_at(t_sphere sphere, t_tuple point);
 t_tuple				reflect(t_tuple in, t_tuple normal);
 t_light				point_light(t_tuple position, float brightness,
 						t_color color);
-t_color				lighting(t_material material, t_light light, t_ambient ambient, t_tuple point,
-					t_tuple eyev, t_tuple normal);
+t_color				lighting(t_material material, t_light light,
+						t_ambient ambient, t_tuple point, t_tuple eyev,
+						t_tuple normal);
 t_material			material(void);
 
-
-// plane 
+// plane
 t_plane				new_plane(t_tuple point, t_tuple normal, t_color color);
 t_intersections		*intersect_plane(t_plane plane, t_ray ray);
 
 // cylinder
-t_cylinder			new_cylinder(t_tuple center, t_tuple axis, double radius, double height);
+t_cylinder			new_cylinder(t_tuple center, t_tuple axis, double radius,
+						double height);
 t_intersections		*intersect_cylinder(t_cylinder *cyl, t_ray ray);
 t_tuple				cyl_normal_at(t_cylinder cyl, t_tuple point);
 void				ft_swap(double *val1, double *val2);
