@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cylinder.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 16:13:27 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/08/11 16:18:30 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/08/17 10:38:56 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,16 @@ t_intersections *intersect_cylinder(t_cylinder *cyl, t_ray ray)
 	double	c;
 	double	discriminant;
     t_intersections *xs;
+    t_tuple cyl_to_ray;
 
-    a = (ray.direction.x * ray.direction.x) + (ray.direction.z * ray.direction.z);
-    if(is_equal_d(a, 0))
-        return (NULL);
-    b = 2 * (ray.origin.x * ray.direction.x) + 2 * (ray.origin.z * ray.direction.z);
-    c = (ray.origin.x * ray.origin.x) + (ray.origin.z * ray.origin.x) - 1;
+    cyl_to_ray = sub_tuples(ray.origin, cyl->center);
+    a = ray.direction.x * ray.direction.x
+    + ray.direction.z * ray.direction.z;
+    b = 2 * (cyl_to_ray.x * ray.direction.x
+        + cyl_to_ray.z * ray.direction.z);
+    c = cyl_to_ray.x * cyl_to_ray.x
+    + cyl_to_ray.z * cyl_to_ray.z
+    - cyl->radius * cyl->radius;
     discriminant = b * b - 4.0 * a * c;
     if(discriminant < 0)
         return(NULL);

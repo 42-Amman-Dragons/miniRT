@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   object_dispatch.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 00:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/13 00:00:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/08/17 10:41:06 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ static t_intersections	*intersect_object(t_object *object, t_ray ray)
 		return (intersect(&object->shape.sphere, ray));
 	if (object->type == OBJ_PLANE)
 		return (intersect_plane(object->shape.plane, ray));
+	if (object->type == OBJ_CYLINDER)
+		return (intersect_cylinder(&(object->shape.cylinder), ray));
 	return (NULL);
 }
 
@@ -49,6 +51,8 @@ t_tuple	object_normal_at(t_object *object, t_tuple point)
 		return (normal_at(object->shape.sphere, point));
 	if (object->type == OBJ_PLANE)
 		return (object->shape.plane.normal);
+	if(object->type == OBJ_CYLINDER)
+		return (cyl_normal_at(object->shape.cylinder, point));
 	return (new_vector(0.0, 0.0, 0.0));
 }
 
