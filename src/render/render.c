@@ -6,7 +6,7 @@
 /*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 00:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/15 13:26:33 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/08/15 19:17:20 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_color	color_at(t_scene *scene, t_ray ray)
 	t_tuple			eye;
 	t_tuple			normal;
 
+	/**/
 	if (!closest_object_hit(scene->objects, ray, &closest))
 		return (new_color(0.0, 0.0, 0.0));
 	point = position(ray, closest.t);

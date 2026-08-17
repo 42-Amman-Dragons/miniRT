@@ -49,6 +49,21 @@ LIGHT_SHADING_SRC = normals.c reflect.c light.c material.c
 OBJECT_SRC = plane.c cylinder.c cylinder_normsl_at.c cylinder_utis.c utils.c
 CAMERA_SRC = init-camera.c
 
+CYLINDER_TEST = $(OBJ_DIR)/tests/test_cylinder
+CYLINDER_TEST_SRC = tests/test_cylinder.c \
+					src/objects/cylinder.c \
+					src/objects/cylinder_utis.c \
+					src/objects/utils.c \
+					src/ray_sphere/ray.c \
+					src/ray_sphere/intersections_mangement.c \
+					src/tuples/tuple.c \
+					src/tuples/tuple_utils.c \
+					src/tuples/tuple_math1.c \
+					src/tuples/vector_math1.c \
+					src/tuples/print_utils.c \
+					src/light/material.c \
+					src/color/color.c
+
 OBJ			= $(SRC:%.c=$(OBJ_DIR)/%.o) \
 $(addprefix $(OBJ_DIR)/$(TUPLES_DIR)/, $(TUPLES_SRC:.c=.o)) \
 $(addprefix $(OBJ_DIR)/$(MATRIX_DIR)/, $(MATRIX_SRC:.c=.o)) \
@@ -66,6 +81,12 @@ $(NAME): $(MLX_LIB) $(LIBFT) $(OBJ)
 
 debug: CFLAGS+=$(DEBUGFLAGS)
 debug: all
+
+test-cylinder: $(LIBFT)
+	@mkdir -p $(dir $(CYLINDER_TEST))
+	$(CC) $(CFLAGS) $(INC) $(CYLINDER_TEST_SRC) $(LIBFT) -lm \
+		-o $(CYLINDER_TEST)
+	./$(CYLINDER_TEST)
 
 $(MLX_LIB):
 	$(MAKE) -C $(MLX_DIR)
@@ -121,4 +142,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all bonus clean fclean re
+.PHONY: all bonus clean fclean re test-cylinder

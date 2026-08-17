@@ -6,7 +6,7 @@
 /*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 00:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/13 00:00:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/08/15 20:04:32 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	init_camera(t_camera *camera)
 		camera->half_height = half_view;
 	}
 	camera->pixel_size = camera->half_width * 2.0 / (double)WIN_W;
+	/*Up and right for the camera*/
 	world_up = world_up_for(camera->dir);
 	camera->right = normalize_vector(cross_product(world_up, camera->dir));
 	camera->up = normalize_vector(cross_product(camera->dir, camera->right));
@@ -53,8 +54,7 @@ t_ray	ray_for_pixel(t_camera *camera, int x, int y)
 
 	camera_x = -camera->half_width + (x + 0.5) * camera->pixel_size;
 	camera_y = camera->half_height - (y + 0.5) * camera->pixel_size;
-	direction = add_tuples(camera->dir,
-			scale_tuple(camera->right, camera_x));
+	direction = add_tuples(camera->dir, scale_tuple(camera->right, camera_x));
 	direction = add_tuples(direction, scale_tuple(camera->up, camera_y));
 	return (new_ray(camera->origin, normalize_vector(direction)));
 }
