@@ -67,7 +67,9 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 		return (rt_error("the cylinder height must be a positive number"));
 	if (parse_color(tokens[5], &obj.color))
 		return (rt_error("the cylinder colour must be R,G,B in [0,255]"));
-	obj.shape.cylinder.radius = diameter / 2.0;
+	obj.shape.cylinder = new_cylinder(obj.shape.cylinder.center,
+			obj.shape.cylinder.axis, diameter / 2.0,
+			obj.shape.cylinder.height);
 	obj.type = OBJ_CYLINDER;
 	if (append_object(&scene->objects, &obj))
 		return (rt_error("out of memory while reading the scene"));

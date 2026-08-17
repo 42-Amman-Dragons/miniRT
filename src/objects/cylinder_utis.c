@@ -12,12 +12,12 @@
 
 #include "minirt.h"
 
-int check_cap(t_cylinder cyl, t_ray ray, double t)
+int	check_cap(t_cylinder cyl, t_ray ray, double t)
 {
-    double x;
-    double z;
+	double	x;
+	double	z;
 
-    x = ray.origin.x + t * ray.direction.x;
-    z = ray.origin.z + t * ray.direction.z;
-    return(x * x + z * z <= cyl.radius);
+	x = ray.origin.x + t * ray.direction.x - cyl.center.x;
+	z = ray.origin.z + t * ray.direction.z - cyl.center.z;
+	return (x * x + z * z <= cyl.radius * cyl.radius);
 }
