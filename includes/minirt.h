@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/01 15:22:22 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/15 13:28:36 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/08/17 13:26:54 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ typedef struct s_cylinder
 	double			lower_end;
 	double			upper_end;
 	t_material		material;
+	t_matrix		*trans;
 }					t_cylinder;
 
 typedef union u_shape
@@ -267,6 +268,7 @@ void				merge_intersections(t_intersections *result,
 						t_intersections *temp);
 void				free_intersections(t_intersections *intersections);
 t_intersection		*hit(t_intersections *intersections);
+t_ray				transform_ray(t_ray ray, t_matrix transformation);
 
 // tuple_utils.c
 int					is_equal_d(double a, double b);
