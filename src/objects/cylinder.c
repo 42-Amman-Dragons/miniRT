@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 16:13:27 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/08/17 14:51:22 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/08/18 12:16:54 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,21 +38,38 @@ void inv_matrix_self(t_matrix **m)
     *m = temp;
 }
 
+
 t_matrix *create_cyl_transformation(t_cylinder *cyl)
 {
     t_tuple         base_v;
     double          theta;
     t_tuple         r_dir;
     t_matrix        *result;
+	double x;
+	double y;
+	double z;
 
     base_v = new_vector(0, 1, 0);
     theta = acos(dot_product(cyl->axis, base_v));
     r_dir = cross_product(cyl->axis, base_v);
+
+	double c = cos(theta);
+	double s = sin(theta);
+	double one_c = 1.0 - c;
+	x = r_dir.x;
+	y = r_dir.y;
+	z = r_dir.z;
     result = create_identity(4);
-    mult_matrix_self(&result, create_translation(-cyl->center.x, -cyl->center.y, -cyl->center.z));
-    mult_matrix_self(&result, rotation_x(theta * r_dir.x));
-    mult_matrix_self(&result, rotation_y(theta * r_dir.y));
-    mult_matrix_self(&result, rotation_z(theta * r_dir.z));
+
+	result->data[0][0] = c + x * x * one_c;
+	result->data[0][1] = x * y * one_c - z * s;
+	result->data[0][2] = x * z * one_c + y * s;
+	result->data[1][0] = y * x * one_c + z * s;
+	result->data[1][1] = c + y * y * one_c;
+	result->data[1][2] = y * z * one_c - x * s;
+	result->data[2][0] = z * x * one_c - y * s;
+	result->data[2][1] = z * y * one_c + x * s;
+	result->data[2][2] = c + z * z * one_c;
     return(result);
 }
 
