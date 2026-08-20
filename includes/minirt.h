@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/01 15:22:22 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/15 13:28:36 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/08/17 13:26:54 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,6 @@ typedef struct s_cylinder
 	t_tuple			axis;
 	double			radius;
 	double			height;
-	double			lower_end;
-	double			upper_end;
 	t_material		material;
 }					t_cylinder;
 
@@ -267,6 +265,7 @@ void				merge_intersections(t_intersections *result,
 						t_intersections *temp);
 void				free_intersections(t_intersections *intersections);
 t_intersection		*hit(t_intersections *intersections);
+t_ray				transform_ray(t_ray ray, t_matrix transformation);
 
 // tuple_utils.c
 int					is_equal_d(double a, double b);
@@ -333,6 +332,9 @@ t_cylinder			new_cylinder(t_tuple center, t_tuple axis, double radius,
 t_intersections		*intersect_cylinder(t_cylinder *cyl, t_ray ray);
 t_tuple				cyl_normal_at(t_cylinder cyl, t_tuple point);
 void				ft_swap(double *val1, double *val2);
-int					check_cap(t_cylinder cyl, t_ray ray, double t);
+t_tuple find_radial_projection(t_tuple v, t_tuple axis);
+double calc_t_for_upper_cap(t_cylinder *cyl, t_ray ray,t_tuple to_ray);
+double calc_t_for_lower_cap(t_cylinder *cyl, t_ray ray,t_tuple to_ray);
+t_tuple calc_radial_v(t_cylinder *cyl, t_ray ray, double t);
 
 #endif
