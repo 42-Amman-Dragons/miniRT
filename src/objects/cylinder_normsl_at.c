@@ -12,17 +12,48 @@
 
 #include "minirt.h"
 
+// t_tuple cyl_normal_at(t_cylinder cyl, t_tuple point)
+// {
+//     t_tuple local_point;
+//     t_tuple local_normal;
+//     t_matrix *inverse_rotation;
+
+//     inverse_rotation = invert_matrix(*cyl.rotation);
+//     local_point = multi_matrix_tuple(*cyl.translation, point);
+//     local_point = multi_matrix_tuple(*inverse_rotation, local_point);
+//     free_matrix(inverse_rotation);
+//     if (local_point.y >= cyl.height / 2.0 - EPSILON
+//         && local_point.x * local_point.x + local_point.z * local_point.z
+//         <= cyl.radius * cyl.radius)
+//         local_normal = new_vector(0, 1, 0);
+//     else if (local_point.y <= -cyl.height / 2.0 + EPSILON
+//         && local_point.x * local_point.x + local_point.z * local_point.z
+//         <= cyl.radius * cyl.radius)
+//         local_normal = new_vector(0, -1, 0);
+//     else
+//         local_normal = normalize_vector(new_vector(local_point.x, 0,
+//                     local_point.z));
+//     local_normal = multi_matrix_tuple(*cyl.rotation, local_normal);
+//     return (normalize_vector(local_normal));
+// }
+
 t_tuple cyl_normal_at(t_cylinder cyl, t_tuple point)
 {
-    double distance;
+    t_tuple v;
+    t_tuple radial_projection;
+    float axial_dist;
 
-    distance = (point.x- cyl.center.x) * (point.x- cyl.center.x) + (point.z - cyl.center.z) * (point.z - cyl.center.z);
-    if(distance <= cyl.radius * cyl.radius)
+    v = sub_tuples(point, cyl.center);
+    axial_dist = dot_product(v, cyl.axis);
+    radial_projection = sub_tuples(v,
+        scale_tuple(cyl.axis, axial_dist));
+    if(axial_dist >= cyl.height / 2.0 - EPSILON)
     {
-        if(point.y >= cyl.upper_end - EPSILON)
-            return(cyl.axis);
-        else if(point.y <= cyl.lower_end + EPSILON)
-            return(new_vector(cyl.axis.x, -cyl.axis.y, cyl.axis.z));
+        return (cyl.axis);
     }
-    return(normalize_vector(new_vector(point.x - cyl.center.x, 0, point.z - cyl.center.z)));
+    if(axial_dist <= -cyl.height / 2.0 + EPSILON)
+    {
+        return (negate_tuple(cyl.axis));
+    }
+    return (normalize_vector(radial_projection));
 }

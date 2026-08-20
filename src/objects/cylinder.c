@@ -12,126 +12,89 @@
 
 #include "minirt.h"
 
-// The calculations assumes that the normal is 0,1,0 so a transformation
-// should be made to make it match the normal provided by the .rt file
-// Notes:
-// The normal in the upper cap is not the same as the lower cap they are inverted.
-void mult_matrix_self(t_matrix **m1, t_matrix *m2)
-{
-    t_matrix *temp;
-    
-    temp = multi_matrix(**m1,*m2);
-    if(!temp)
-        return;
-    free_matrix(*m1);
-    free_matrix(m2);
-    *m1 = temp;
-}
-
-void inv_matrix_self(t_matrix **m)
-{
-    t_matrix *temp;
-    temp = invert_matrix(**m);
-    if(!temp)
-        return;
-    free_matrix(*m);
-    *m = temp;
-}
-
-
-t_matrix *create_cyl_transformation(t_cylinder *cyl)
-{
-    t_tuple         base_v;
-    double          theta;
-    t_tuple         r_dir;
-    t_matrix        *result;
-	double x;
-	double y;
-	double z;
-
-    base_v = new_vector(0, 1, 0);
-    theta = acos(dot_product(cyl->axis, base_v));
-    r_dir = cross_product(cyl->axis, base_v);
-
-	double c = cos(theta);
-	double s = sin(theta);
-	double one_c = 1.0 - c;
-	x = r_dir.x;
-	y = r_dir.y;
-	z = r_dir.z;
-    result = create_identity(4);
-
-	result->data[0][0] = c + x * x * one_c;
-	result->data[0][1] = x * y * one_c - z * s;
-	result->data[0][2] = x * z * one_c + y * s;
-	result->data[1][0] = y * x * one_c + z * s;
-	result->data[1][1] = c + y * y * one_c;
-	result->data[1][2] = y * z * one_c - x * s;
-	result->data[2][0] = z * x * one_c - y * s;
-	result->data[2][1] = z * y * one_c + x * s;
-	result->data[2][2] = c + z * z * one_c;
-    return(result);
-}
 
 t_cylinder	new_cylinder(t_tuple center, t_tuple axis, double radius,
 		double height)
 {
     t_cylinder  cyl;
     
-	cyl.lower_end = center.y - height / 2;
-	cyl.upper_end = center.y + height / 2;
     cyl.center = center;
     cyl.axis = axis;
     cyl.radius = radius;
     cyl.height = height;
-    cyl.trans = create_cyl_transformation(&cyl);
 	return (cyl);
-}
-
-t_intersections	*intersect_cap(t_cylinder *cyl, t_ray ray)
-{
-	t_intersections	*xs;
-	double			t;
-
-	if (is_equal_d(ray.direction.y, 0))
-		return (NULL);
-	xs = new_intersections();
-	if (!xs)
-		return (NULL);
-	// check upper bound
-	t = (cyl->upper_end - ray.origin.y) / ray.direction.y;
-	if (check_cap(*cyl, ray, t) == 1)
-		append_intrsection(xs, new_intersection(t, cyl));
-	// check lower bound
-	t = (cyl->lower_end - ray.origin.y) / ray.direction.y;
-	if (check_cap(*cyl, ray, t) == 1)
-		append_intrsection(xs, new_intersection(t, cyl));
-	if (xs->count == 0)
-	{
-		free(xs);
-		xs = NULL;
-	}
-	return (xs);
 }
 
 static t_intersections	*calc_cylinder_intersections(double t0, double t1,
 		t_ray ray, t_cylinder *cyl)
 {
 	t_intersections	*xs;
-	double			y0;
-	double			y1;
+	t_tuple		    point;
+	float			axis_distance;
 
 	xs = new_intersections();
 	if (!xs)
 		return (NULL);
-	if (t0 > t1)
-		ft_swap(&t0, &t1);
-	y0 = ray.origin.y + t0 * ray.direction.y;
-	if (y0 > cyl->lower_end && y0 < cyl->upper_end)
+	point = position(ray, t0);
+	axis_distance = dot_product(cyl->axis,
+			sub_tuples(point, cyl->center));
+	if (axis_distance <= cyl->height / 2 && axis_distance >= -cyl->height / 2)
 		append_intrsection(xs, new_intersection(t0, cyl));
-	y1 = ray.origin.y + t1 * ray.direction.y;
-	if (y1 > cyl->lower_end && y1 < cyl->upper_end)
+	point = position(ray, t1);
+	axis_distance = dot_product(cyl->axis,
+			sub_tuples(point, cyl->center));
+	if (axis_distance <= cyl->height / 2 && axis_distance > -cyl->height / 2)
 		append_intrsection(xs, new_intersection(t1, cyl));
+	return (xs);
+}
+
+void add_upper_intersection(t_intersections	**xs,t_cylinder *cyl, t_ray ray, t_tuple to_ray)
+{
+	double t;
+	t_tuple radial_p;
+
+	t = calc_t_for_upper_cap(cyl,ray, to_ray);
+	radial_p = calc_radial_v(cyl, ray, t);
+	if(dot_product(radial_p, radial_p) <= pow(cyl->radius,2))
+	{
+		append_intrsection(*xs, new_intersection(
+			t,
+			cyl
+		));
+	}
+}
+
+void add_lower_intersection(t_intersections	**xs,t_cylinder *cyl, t_ray ray, t_tuple to_ray)
+{
+	double t;
+	t_tuple radial_p;
+
+	t = calc_t_for_lower_cap(cyl,ray, to_ray);
+	radial_p = calc_radial_v(cyl, ray, t);
+	if(dot_product(radial_p, radial_p) <= pow(cyl->radius,2))
+	{
+		append_intrsection(*xs, new_intersection(
+			t,
+			cyl
+		));
+	}
+}
+
+t_intersections *intersect_cap(t_cylinder *cyl, t_ray ray)
+{
+	t_intersections	*xs;
+	t_tuple	to_ray;
+	double			denominator;
+
+	denominator = dot_product(cyl->axis, ray.direction);
+	if (is_equal_d(denominator, 0))
+		return (NULL);
+	xs = new_intersections();
+	if (!xs)
+		return (NULL);
+	to_ray = sub_tuples(ray.origin, cyl->center);
+	add_upper_intersection(&xs, cyl, ray, to_ray);
+	add_lower_intersection(&xs, cyl, ray, to_ray);
 	return (xs);
 }
 
@@ -141,25 +104,26 @@ t_intersections	*intersect_cylinder(t_cylinder *cyl, t_ray ray)
 	double			b;
 	double			c;
 	double			discriminant;
-    t_matrix        *transform;
+	t_tuple			origin;
+	t_tuple			direction;
 	t_intersections	*xs;
 
-    transform = invert_matrix(*(cyl->trans));
-    ray = transform_ray(ray, *transform);
-	a = (ray.direction.x * ray.direction.x) + (ray.direction.z
-			* ray.direction.z);
-	if (is_equal_d(a, 0))
-		return (NULL);
-	b = 2 * (ray.origin.x * ray.direction.x) + 2 * (ray.origin.z * ray.direction.z);
-	c = (ray.origin.x * ray.origin.x) + (ray.origin.z * ray.origin.z) - (cyl->radius
-			* cyl->radius);
-	discriminant = b * b - 4.0 * a * c;
-	if (discriminant < 0)
-		return (NULL);
+	origin = sub_tuples(ray.origin, cyl->center);
+	origin = find_radial_projection(origin, cyl->axis);
+	direction = sub_tuples(ray.direction,
+		scale_tuple(cyl->axis, dot_product(ray.direction, cyl->axis)));
+	a = dot_product(direction, direction);
+	b = 2 * dot_product(origin, direction);
+	c = dot_product(origin, origin) - cyl->radius * cyl->radius;
 	xs = new_intersections();
-	merge_intersections(xs, calc_cylinder_intersections((-b
-				- sqrt(discriminant)) / (2 * a), (-b + sqrt(discriminant)) / (2
-				* a), ray, cyl));
+	if (!is_equal_d(a, 0))
+	{
+		discriminant = b * b - 4.0 * a * c;
+		if (discriminant >= 0)
+			merge_intersections(xs, calc_cylinder_intersections((-b
+					- sqrt(discriminant)) / (2 * a), (-b + sqrt(discriminant))
+					/ (2 * a), ray, cyl));
+	}
 	merge_intersections(xs, intersect_cap(cyl, ray));
 	return (xs);
 }

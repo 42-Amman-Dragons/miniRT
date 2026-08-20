@@ -19,8 +19,11 @@ t_ray	new_ray(t_tuple position, t_tuple direction)
 
 t_tuple	position(t_ray ray, double distance)
 {
-	return (add_tuples(ray.origin,
-			scale_tuple(ray.direction, distance)));
+    t_tuple pos;
+
+    pos = add_tuples(ray.origin, scale_tuple(ray.direction, distance));
+    pos.w = 1.0;
+    return (pos);
 }
 
 t_ray transform_ray(t_ray ray, t_matrix transformation)

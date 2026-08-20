@@ -29,9 +29,9 @@ t_tuple add_tuples(t_tuple t1, t_tuple t2)
 
 t_tuple sub_tuples(t_tuple t1, t_tuple t2)
 {
-    if(t1.w - t2.w < 0)
+    if (is_equal_d(t1.w, 0.0) && is_equal_d(t2.w, 1.0))
     {
-        print_error_return("Negative wight\n", 1);
+        print_error_return("Cannot subtract a point from a vector\n", 1);
         return (t_tuple){0,0,0,0};
     }
     return ((t_tuple){

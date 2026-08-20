@@ -110,10 +110,7 @@ typedef struct s_cylinder
 	t_tuple			axis;
 	double			radius;
 	double			height;
-	double			lower_end;
-	double			upper_end;
 	t_material		material;
-	t_matrix		*trans;
 }					t_cylinder;
 
 typedef union u_shape
@@ -335,6 +332,9 @@ t_cylinder			new_cylinder(t_tuple center, t_tuple axis, double radius,
 t_intersections		*intersect_cylinder(t_cylinder *cyl, t_ray ray);
 t_tuple				cyl_normal_at(t_cylinder cyl, t_tuple point);
 void				ft_swap(double *val1, double *val2);
-int					check_cap(t_cylinder cyl, t_ray ray, double t);
+t_tuple find_radial_projection(t_tuple v, t_tuple axis);
+double calc_t_for_upper_cap(t_cylinder *cyl, t_ray ray,t_tuple to_ray);
+double calc_t_for_lower_cap(t_cylinder *cyl, t_ray ray,t_tuple to_ray);
+t_tuple calc_radial_v(t_cylinder *cyl, t_ray ray, double t);
 
 #endif
