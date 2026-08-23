@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 00:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/15 19:17:20 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/08/23 11:25:34 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,11 @@ t_color	color_at(t_scene *scene, t_ray ray)
 	if (dot_product(normal, eye) < 0.0)
 		normal = negate_tuple(normal);
 	return (lighting(object_material(closest.object), scene->light,
-			scene->ambient, point, eye, normal));
+			scene->ambient, prepare_basic_calc(
+				point,
+				eye,
+				normal
+			)));
 }
 /*This will be redone later*/
 
