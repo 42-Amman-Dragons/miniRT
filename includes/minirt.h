@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/01 15:22:22 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/17 13:26:54 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/08/23 11:43:47 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,11 +182,21 @@ typedef struct s_rt
 	t_scene			scene;
 }					t_rt;
 
+typedef struct s_calculations
+{
+	t_tuple point;
+	t_tuple eyev;
+	t_tuple normal;
+	t_tuple	lightv;
+	t_tuple	reflectv;
+}	t_calculations;
+
 int					init_mlx(t_rt *rt);
 void				cleanup_rt(t_rt *rt);
 int					close_rt(t_rt *rt);
 void				put_pixel_to_image(t_rt *rt, int x, int y, t_color color);
 
+t_calculations		prepare_basic_calc(t_tuple point ,t_tuple eyev, t_tuple normal);
 void				render_scene(t_rt *rt);
 t_color				color_at(t_scene *scene, t_ray ray);
 int					closest_object_hit(t_object *objects, t_ray ray,
@@ -318,9 +328,14 @@ t_tuple				reflect(t_tuple in, t_tuple normal);
 t_light				point_light(t_tuple position, float brightness,
 						t_color color);
 t_color				lighting(t_material material, t_light light,
-						t_ambient ambient, t_tuple point, t_tuple eyev,
-						t_tuple normal);
+						t_ambient ambient, t_calculations calc);
 t_material			material(void);
+void				set_amb_diff_black(t_color *amb_diff_spect);
+void 				handle_ambient(t_color *amb_diff_spect, t_material material, t_ambient ambient);
+void 				handle_diffuse(t_color *amb_diff_spect, t_material material,
+									t_color effective, t_calculations calc);
+void 				handle_specular(t_color *amb_diff_spect, t_material material,
+									t_color light_intensity, t_calculations calc);
 
 // plane
 t_plane				new_plane(t_tuple point, t_tuple normal, t_color color);

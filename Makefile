@@ -36,6 +36,7 @@ SRC			= main.c \
 			  parsing/parse_objects.c \
 			  render/render.c \
 			  render/object_dispatch.c \
+			  render/prepare_basic_calc.c \
 			  window/init_mlx.c \
 			  window/hooks.c \
 			  window/pexils_to_image.c
@@ -45,7 +46,7 @@ COLOR_SRC = color.c color_math.c
 RAY_SRC = ray.c sphere.c intersections_mangement.c hit.c
 MATRIX_SRC = matrix.c matrix_math.c matrices.c invert_matrix.c invert_matrix_utils.c
 MATRIX_TRANS_SRC = translation.c scaling.c rotation.c shearing.c
-LIGHT_SHADING_SRC = normals.c reflect.c light.c material.c
+LIGHT_SHADING_SRC = normals.c reflect.c light.c material.c light_utils.c
 OBJECT_SRC = plane.c cylinder.c cylinder_normsl_at.c cylinder_utis.c utils.c
 CAMERA_SRC = init-camera.c
 
