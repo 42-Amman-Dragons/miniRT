@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/09 15:31:53 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/08/10 11:06:38 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/08/23 11:49:48 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,44 +17,33 @@ t_light	point_light(t_tuple position, float brightness, t_color color)
 	return ((t_light){position, brightness, color});
 }
 
-void	set_amb_diff_black(t_color *amb_diff_spect)
-{
-	amb_diff_spect[1] = new_color(0, 0, 0);
-	amb_diff_spect[2] = new_color(0, 0, 0);
-}
 
-//  Phong model
-// @TODO: incorporate the ambient color and ration of the inputs with the material. (Done need review)
-// @TODO: light color is not used for the mandatory part.
-t_color	lighting(t_material material, t_light light, t_ambient ambient, t_tuple point,
-		t_tuple eyev, t_tuple normal)
+/*  Phong model --> 3 components of light: ambient, diffuse, and specular.
+  -------------------------------------------------------
+- The (light intensity) represents the light amount and the light color that is emitted from the light source.
+- The (effective light) represent how the light color and the oject color interact with each other.
+- The (ambient light) exist for every pixel in the sceene.
+- The (diffuse and spectular) light is only calculated if the angle 
+  between the normal and the light is less than 90 degrees. If the angle is greater than 90 degrees.
+*/
+
+t_color	lighting(t_material material, t_light light, t_ambient ambient, t_calculations calc)
 {
 	t_color	effective_color;
-	t_tuple	lightv;
 	t_color	amb_diff_spect[3];
-	t_tuple	reflectv;
 	t_color	light_intensity;
 
 	light_intensity = scale_color(light.color, light.brightness);
 	effective_color = mult_color(material.color, light_intensity);
-	lightv = normalize_vector(sub_tuples(light.pos, point));
-	amb_diff_spect[0] = scale_color(mult_color(material.color, ambient.color), ambient.ratio);
-	if (dot_product(lightv, normal) < 0)
+	calc.lightv = normalize_vector(sub_tuples(light.pos, calc.point));
+	handle_ambient(amb_diff_spect, material, ambient);
+	if (dot_product(calc.lightv, calc.normal) < 0)
 		set_amb_diff_black(amb_diff_spect);
 	else
 	{
-		amb_diff_spect[1] = scale_color(scale_color(effective_color,
-					material.diffuse), dot_product(lightv, normal));
-		reflectv = reflect(negate_tuple(lightv), normal);
-		if (dot_product(reflectv, eyev) <= 0)
-			amb_diff_spect[2] = new_color(0, 0, 0);
-		else
-		{
-			amb_diff_spect[2] = scale_color(scale_color(light_intensity,
-						material.specular), pow(dot_product(reflectv, eyev),
-						material.shininess));
-		}
-	}
+		handle_diffuse(amb_diff_spect, material, effective_color, calc);
+		handle_specular(amb_diff_spect, material, light_intensity, calc);
+	}	
 	return (add_colors(add_colors(amb_diff_spect[0], amb_diff_spect[1]),
 			amb_diff_spect[2]));
 }

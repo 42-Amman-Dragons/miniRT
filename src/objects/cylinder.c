@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cylinder.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 16:13:27 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/08/18 12:16:54 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/08/23 12:41:24 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,7 @@ t_intersections	*intersect_cylinder(t_cylinder *cyl, t_ray ray)
 		return (NULL);
 	origin = sub_tuples(ray.origin, cyl->center);
 	origin = find_radial_projection(origin, cyl->axis);
-	direction = sub_tuples(ray.direction,
-		scale_tuple(cyl->axis, dot_product(ray.direction, cyl->axis)));
+	direction = find_radial_projection(ray.direction, cyl->axis);
 	a = dot_product(direction, direction);
 	b = 2 * dot_product(origin, direction);
 	c = dot_product(origin, origin) - cyl->radius * cyl->radius;
