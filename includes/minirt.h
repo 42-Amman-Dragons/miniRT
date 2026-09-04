@@ -192,6 +192,8 @@ void				render_scene(t_rt *rt);
 t_color				color_at(t_scene *scene, t_ray ray);
 int					closest_object_hit(t_object *objects, t_ray ray,
 						t_render_hit *result);
+int					object_hit_between(t_object *objects, t_ray ray,
+						double min_t, double max_t);
 t_tuple				object_normal_at(t_object *object, t_tuple point);
 t_material			object_material(t_object *object);
 
@@ -325,7 +327,7 @@ t_material			material(void);
 
 // plane
 t_plane				new_plane(t_tuple point, t_tuple normal, t_color color);
-t_intersections		*intersect_plane(t_plane plane, t_ray ray);
+t_intersections		*intersect_plane(t_plane *plane, t_ray ray);
 
 // cylinder
 t_cylinder			new_cylinder(t_tuple center, t_tuple axis, double radius,

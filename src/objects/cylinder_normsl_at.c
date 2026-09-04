@@ -41,17 +41,21 @@ t_tuple cyl_normal_at(t_cylinder cyl, t_tuple point)
 {
     t_tuple v;
     t_tuple radial_projection;
-    float axial_dist;
+    double axial_dist;
+    double radial_squared;
 
     v = sub_tuples(point, cyl.center);
     axial_dist = dot_product(v, cyl.axis);
     radial_projection = sub_tuples(v,
         scale_tuple(cyl.axis, axial_dist));
-    if(axial_dist >= cyl.height / 2.0 - EPSILON)
+    radial_squared = dot_product(radial_projection, radial_projection);
+    if (fabs(axial_dist - cyl.height / 2.0) <= EPSILON
+        && radial_squared <= cyl.radius * cyl.radius + EPSILON)
     {
         return (cyl.axis);
     }
-    if(axial_dist <= -cyl.height / 2.0 + EPSILON)
+    if (fabs(axial_dist + cyl.height / 2.0) <= EPSILON
+        && radial_squared <= cyl.radius * cyl.radius + EPSILON)
     {
         return (negate_tuple(cyl.axis));
     }

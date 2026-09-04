@@ -17,7 +17,7 @@ static t_intersections	*intersect_object(t_object *object, t_ray ray)
 	if (object->type == OBJ_SPHERE)
 		return (intersect(&object->shape.sphere, ray));
 	if (object->type == OBJ_PLANE)
-		return (intersect_plane(object->shape.plane, ray));
+		return (intersect_plane(&object->shape.plane, ray));
 	if (object->type == OBJ_CYLINDER)
 		return (intersect_cylinder(&object->shape.cylinder, ray));
 	return (NULL);
@@ -43,6 +43,31 @@ int	closest_object_hit(t_object *objects, t_ray ray, t_render_hit *result)
 		objects = objects->next;
 	}
 	return (result->object != NULL);
+}
+
+int	object_hit_between(t_object *objects, t_ray ray, double min_t,
+		double max_t)
+{
+	t_intersections	*xs;
+	int				i;
+
+	while (objects)
+	{
+		xs = intersect_object(objects, ray);
+		i = 0;
+		while (xs && i < xs->count)
+		{
+			if (xs->items[i].t > min_t && xs->items[i].t < max_t)
+			{
+				free_intersections(xs);
+				return (1);
+			}
+			i++;
+		}
+		free_intersections(xs);
+		objects = objects->next;
+	}
+	return (0);
 }
 
 t_tuple	object_normal_at(t_object *object, t_tuple point)

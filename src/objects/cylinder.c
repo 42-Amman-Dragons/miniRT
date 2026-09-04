@@ -30,7 +30,7 @@ static t_intersections	*calc_cylinder_intersections(double t0, double t1,
 {
 	t_intersections	*xs;
 	t_tuple		    point;
-	float			axis_distance;
+	double			axis_distance;
 
 	xs = new_intersections();
 	if (!xs)
@@ -38,12 +38,14 @@ static t_intersections	*calc_cylinder_intersections(double t0, double t1,
 	point = position(ray, t0);
 	axis_distance = dot_product(cyl->axis,
 			sub_tuples(point, cyl->center));
-	if (axis_distance <= cyl->height / 2 && axis_distance >= -cyl->height / 2)
+	if (axis_distance <= cyl->height / 2.0 + EPSILON
+		&& axis_distance >= -cyl->height / 2.0 - EPSILON)
 		append_intrsection(xs, new_intersection(t0, cyl));
 	point = position(ray, t1);
 	axis_distance = dot_product(cyl->axis,
 			sub_tuples(point, cyl->center));
-	if (axis_distance <= cyl->height / 2 && axis_distance > -cyl->height / 2)
+	if (axis_distance <= cyl->height / 2.0 + EPSILON
+		&& axis_distance >= -cyl->height / 2.0 - EPSILON)
 		append_intrsection(xs, new_intersection(t1, cyl));
 	return (xs);
 }
@@ -55,7 +57,7 @@ void add_upper_intersection(t_intersections	**xs,t_cylinder *cyl, t_ray ray, t_t
 
 	t = calc_t_for_upper_cap(cyl,ray, to_ray);
 	radial_p = calc_radial_v(cyl, ray, t);
-	if(dot_product(radial_p, radial_p) <= pow(cyl->radius,2))
+	if(dot_product(radial_p, radial_p) <= pow(cyl->radius,2) + EPSILON)
 	{
 		append_intrsection(*xs, new_intersection(
 			t,
@@ -71,7 +73,7 @@ void add_lower_intersection(t_intersections	**xs,t_cylinder *cyl, t_ray ray, t_t
 
 	t = calc_t_for_lower_cap(cyl,ray, to_ray);
 	radial_p = calc_radial_v(cyl, ray, t);
-	if(dot_product(radial_p, radial_p) <= pow(cyl->radius,2))
+	if(dot_product(radial_p, radial_p) <= pow(cyl->radius,2) + EPSILON)
 	{
 		append_intrsection(*xs, new_intersection(
 			t,
@@ -87,7 +89,7 @@ t_intersections *intersect_cap(t_cylinder *cyl, t_ray ray)
 	double			denominator;
 
 	denominator = dot_product(cyl->axis, ray.direction);
-	if (is_equal_d(denominator, 0))
+	if (fabs(denominator) < EPSILON)
 		return (NULL);
 	xs = new_intersections();
 	if (!xs)
@@ -108,6 +110,8 @@ t_intersections	*intersect_cylinder(t_cylinder *cyl, t_ray ray)
 	t_tuple			direction;
 	t_intersections	*xs;
 
+	if (!cyl || cyl->radius <= 0.0 || cyl->height <= 0.0)
+		return (NULL);
 	origin = sub_tuples(ray.origin, cyl->center);
 	origin = find_radial_projection(origin, cyl->axis);
 	direction = sub_tuples(ray.direction,
@@ -116,13 +120,19 @@ t_intersections	*intersect_cylinder(t_cylinder *cyl, t_ray ray)
 	b = 2 * dot_product(origin, direction);
 	c = dot_product(origin, origin) - cyl->radius * cyl->radius;
 	xs = new_intersections();
+	if (!xs)
+		return (NULL);
 	if (!is_equal_d(a, 0))
 	{
 		discriminant = b * b - 4.0 * a * c;
-		if (discriminant >= 0)
+		if (discriminant >= -EPSILON)
+		{
+			if (discriminant < 0.0)
+				discriminant = 0.0;
 			merge_intersections(xs, calc_cylinder_intersections((-b
 					- sqrt(discriminant)) / (2 * a), (-b + sqrt(discriminant))
 					/ (2 * a), ray, cyl));
+		}
 	}
 	merge_intersections(xs, intersect_cap(cyl, ray));
 	return (xs);
