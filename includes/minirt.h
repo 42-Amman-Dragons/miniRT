@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/01 15:22:22 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/17 13:26:54 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/08/21 03:46:56 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # define MASK_KEYPRESS 1L
 # define MASK_EXPOSE 32768L
 # define EPSILON 1e-9
+# define PI 3.14159265358979323846
 
 typedef struct s_tuple
 {
@@ -332,9 +333,11 @@ t_cylinder			new_cylinder(t_tuple center, t_tuple axis, double radius,
 t_intersections		*intersect_cylinder(t_cylinder *cyl, t_ray ray);
 t_tuple				cyl_normal_at(t_cylinder cyl, t_tuple point);
 void				ft_swap(double *val1, double *val2);
-t_tuple find_radial_projection(t_tuple v, t_tuple axis);
-double calc_t_for_upper_cap(t_cylinder *cyl, t_ray ray,t_tuple to_ray);
-double calc_t_for_lower_cap(t_cylinder *cyl, t_ray ray,t_tuple to_ray);
-t_tuple calc_radial_v(t_cylinder *cyl, t_ray ray, double t);
+t_tuple				find_radial_projection(t_tuple v, t_tuple axis);
+double				calc_t_for_upper_cap(t_cylinder *cyl, t_ray ray,
+						t_tuple to_ray);
+double				calc_t_for_lower_cap(t_cylinder *cyl, t_ray ray,
+						t_tuple to_ray);
+t_tuple				calc_radial_v(t_cylinder *cyl, t_ray ray, double t);
 
 #endif

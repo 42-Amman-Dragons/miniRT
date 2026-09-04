@@ -6,13 +6,11 @@
 /*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 00:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/15 20:04:32 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/08/21 03:46:51 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
-#define PI 3.14159265358979323846
 
 static t_tuple	world_up_for(t_tuple direction)
 {
