@@ -55,8 +55,8 @@ t_color	color_at(t_scene *scene, t_ray ray)
 	material = object_material(closest.object);
 	if (is_shadowed(scene, point, normal))
 		return (ambient_at(material, scene->ambient));
-	return (lighting(material, scene->light,
-			scene->ambient, point, eye, normal));
+	return (lighting(material, scene->light, scene->ambient,
+			prepare_basic_calc(point, eye, normal)));
 }
 
 void	render_scene(t_rt *rt)
