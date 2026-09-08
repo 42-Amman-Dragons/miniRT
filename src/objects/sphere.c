@@ -14,10 +14,10 @@
 
 t_sphere	new_sphere(t_tuple center, double radius, t_color color)
 {
-	t_material m;
-    
-    m = material();
-    m.color = color;
+	t_material	m;
+
+	m = material();
+	m.color = color;
 	return ((t_sphere){center, radius, m});
 }
 

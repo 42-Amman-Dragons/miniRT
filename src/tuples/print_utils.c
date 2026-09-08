@@ -6,14 +6,14 @@
 /*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/02 12:54:25 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/08/02 12:54:26 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/09/08 16:24:36 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-int print_error_return(char *msg, int err)
+int	print_error_return(char *msg, int err)
 {
-    ft_putstr_fd(msg, 2);
-    return(err);
+	ft_putstr_fd(msg, 2);
+	return (err);
 }

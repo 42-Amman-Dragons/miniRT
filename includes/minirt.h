@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/01 15:22:22 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/09/05 02:17:44 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/09/08 15:57:16 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,19 +185,20 @@ typedef struct s_rt
 
 typedef struct s_calculations
 {
-	t_tuple point;
-	t_tuple eyev;
-	t_tuple normal;
-	t_tuple	lightv;
-	t_tuple	reflectv;
-}	t_calculations;
+	t_tuple			point;
+	t_tuple			eyev;
+	t_tuple			normal;
+	t_tuple			lightv;
+	t_tuple			reflectv;
+}					t_calculations;
 
 int					init_mlx(t_rt *rt);
 void				cleanup_rt(t_rt *rt);
 int					close_rt(t_rt *rt);
 void				put_pixel_to_image(t_rt *rt, int x, int y, t_color color);
 
-t_calculations		prepare_basic_calc(t_tuple point ,t_tuple eyev, t_tuple normal);
+t_calculations		prepare_basic_calc(t_tuple point, t_tuple eyev,
+						t_tuple normal);
 void				render_scene(t_rt *rt);
 t_color				color_at(t_scene *scene, t_ray ray);
 int					closest_object_hit(t_object *objects, t_ray ray,
@@ -278,7 +279,6 @@ void				merge_intersections(t_intersections *result,
 						t_intersections *temp);
 void				free_intersections(t_intersections *intersections);
 t_intersection		*hit(t_intersections *intersections);
-t_ray				transform_ray(t_ray ray, t_matrix transformation);
 
 // tuple_utils.c
 int					is_equal_d(double a, double b);
@@ -295,35 +295,6 @@ t_color				sub_colors(t_color c1, t_color c2);
 t_color				scale_color(t_color t, double scalar);
 t_color				divide_color(t_color t, double num);
 t_color				mult_color(t_color c1, t_color c2);
-// matrix
-t_matrix			*new_matrix(double *values, int col, int row);
-void				free_matrix(t_matrix *m);
-double				**create_empty_data(int col, int row);
-void				print_matrix(t_matrix *m);
-
-t_matrix			*create_empty_matrix(int col, int row);
-t_matrix			*create_identity(int num);
-t_matrix			*create_transpose(t_matrix *m);
-
-double				calc_det(t_matrix m);
-t_matrix			*submatrix(t_matrix m, int row, int col);
-double				minor(t_matrix m, int row, int col);
-double				cofactor(t_matrix m, int row, int col);
-t_matrix			*divide_matrix_by(t_matrix m, double num);
-t_matrix			*invert_matrix(t_matrix m);
-t_matrix			*create_cofactor_matrix(t_matrix m);
-int					is_equal_matrix(t_matrix t1, t_matrix t2);
-t_matrix			*multi_matrix(t_matrix m1, t_matrix m2);
-t_tuple				multi_matrix_tuple(t_matrix m, t_tuple t);
-
-// transformations
-t_matrix			*create_translation(double x, double y, double z);
-t_matrix			*create_scaling(double x, double y, double z);
-t_matrix			*rotation_x(double radians);
-t_matrix			*rotation_y(double radians);
-t_matrix			*rotation_z(double radians);
-t_matrix			*create_shear(double xy, double xz, double yx, double yz,
-						double zx, double zy);
 
 // Lightning and shading
 t_tuple				normal_at(t_sphere sphere, t_tuple point);
@@ -334,11 +305,13 @@ t_color				lighting(t_material material, t_light light,
 						t_ambient ambient, t_calculations calc);
 t_material			material(void);
 void				set_amb_diff_black(t_color *amb_diff_spect);
-void 				handle_ambient(t_color *amb_diff_spect, t_material material, t_ambient ambient);
-void 				handle_diffuse(t_color *amb_diff_spect, t_material material,
-									t_color effective, t_calculations calc);
-void 				handle_specular(t_color *amb_diff_spect, t_material material,
-									t_color light_intensity, t_calculations calc);
+void				handle_ambient(t_color *amb_diff_spect, t_material material,
+						t_ambient ambient);
+void				handle_diffuse(t_color *amb_diff_spect, t_material material,
+						t_color effective, t_calculations calc);
+void				handle_specular(t_color *amb_diff_spect,
+						t_material material, t_color light_intensity,
+						t_calculations calc);
 
 // plane
 t_plane				new_plane(t_tuple point, t_tuple normal, t_color color);
@@ -348,6 +321,7 @@ t_intersections		*intersect_plane(t_plane *plane, t_ray ray);
 t_cylinder			new_cylinder(t_tuple center, t_tuple axis, double radius,
 						double height);
 t_intersections		*intersect_cylinder(t_cylinder *cyl, t_ray ray);
+t_intersections		*intersect_cap(t_cylinder *cyl, t_ray ray);
 t_tuple				cyl_normal_at(t_cylinder cyl, t_tuple point);
 void				ft_swap(double *val1, double *val2);
 t_tuple				find_radial_projection(t_tuple v, t_tuple axis);

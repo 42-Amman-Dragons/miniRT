@@ -12,12 +12,11 @@
 
 #include "minirt.h"
 
-void ft_swap(double *val1, double *val2)
+void	ft_swap(double *val1, double *val2)
 {
-    double temp;
-    
-    temp = *val1;
-    *val1 = *val2;
-    *val2 = temp;
-}
+	double	temp;
 
+	temp = *val1;
+	*val1 = *val2;
+	*val2 = temp;
+}

@@ -20,8 +20,6 @@ COLOR_DIR = color
 RAY_DIR = ray
 INTERSECTIONS_DIR = intersections
 TUPLES_DIR = tuples
-MATRIX_DIR = matrix
-MATRIX_TRANS_DIR = matrix_transformations
 LIGHT_SHADING_DIR = light
 OBJECTS_DIR = objects
 CAMERA_DIR = camera
@@ -45,33 +43,14 @@ SRC			= main.c \
 TUPLES_SRC = tuple.c tuple_utils.c print_utils.c tuple_math1.c vector_math1.c
 COLOR_SRC = color.c color_math.c
 RAY_SRC = ray.c
-INTERSECTIONS_SRC = intersections.c hit.c
-MATRIX_SRC = matrix.c matrix_math.c matrices.c invert_matrix.c invert_matrix_utils.c
-MATRIX_TRANS_SRC = translation.c scaling.c rotation.c shearing.c
+INTERSECTIONS_SRC = intersections.c hit.c merge_intersections.c
 LIGHT_SHADING_SRC = normals.c reflect.c light.c material.c light_utils.c
 OBJECT_SRC = sphere.c plane.c cylinder.c cylinder_normsl_at.c cylinder_utis.c \
-			 utils.c
+			 utils.c cylinder_cap_intersection.c
 CAMERA_SRC = init-camera.c
-
-CYLINDER_TEST = $(OBJ_DIR)/tests/test_cylinder
-CYLINDER_TEST_SRC = tests/test_cylinder.c \
-					src/objects/cylinder.c \
-					src/objects/cylinder_utis.c \
-					src/objects/utils.c \
-					src/ray/ray.c \
-					src/intersections/intersections.c \
-					src/tuples/tuple.c \
-					src/tuples/tuple_utils.c \
-					src/tuples/tuple_math1.c \
-					src/tuples/vector_math1.c \
-					src/tuples/print_utils.c \
-					src/light/material.c \
-					src/color/color.c
 
 OBJ			= $(SRC:%.c=$(OBJ_DIR)/%.o) \
 $(addprefix $(OBJ_DIR)/$(TUPLES_DIR)/, $(TUPLES_SRC:.c=.o)) \
-$(addprefix $(OBJ_DIR)/$(MATRIX_DIR)/, $(MATRIX_SRC:.c=.o)) \
-$(addprefix $(OBJ_DIR)/$(MATRIX_TRANS_DIR)/, $(MATRIX_TRANS_SRC:.c=.o)) \
 $(addprefix $(OBJ_DIR)/$(COLOR_DIR)/, $(COLOR_SRC:.c=.o)) \
 $(addprefix $(OBJ_DIR)/$(RAY_DIR)/, $(RAY_SRC:.c=.o)) \
 $(addprefix $(OBJ_DIR)/$(INTERSECTIONS_DIR)/, $(INTERSECTIONS_SRC:.c=.o)) \
@@ -117,14 +96,6 @@ $(OBJ_DIR)/$(RAY_DIR)/%.o: $(SRC_DIR)/$(RAY_DIR)/%.c includes/minirt.h
 
 $(OBJ_DIR)/$(INTERSECTIONS_DIR)/%.o: $(SRC_DIR)/$(INTERSECTIONS_DIR)/%.c includes/minirt.h
 	mkdir -p $(OBJ_DIR)/$(INTERSECTIONS_DIR)
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@
-
-$(OBJ_DIR)/$(MATRIX_DIR)/%.o: $(SRC_DIR)/$(MATRIX_DIR)/%.c includes/minirt.h
-	mkdir -p $(OBJ_DIR)/$(MATRIX_DIR)
-	$(CC) $(CFLAGS) $(INC) -c $< -o $@
-
-$(OBJ_DIR)/$(MATRIX_TRANS_DIR)/%.o: $(SRC_DIR)/$(MATRIX_TRANS_DIR)/%.c includes/minirt.h
-	mkdir -p $(OBJ_DIR)/$(MATRIX_TRANS_DIR)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
 $(OBJ_DIR)/$(LIGHT_SHADING_DIR)/%.o: $(SRC_DIR)/$(LIGHT_SHADING_DIR)/%.c

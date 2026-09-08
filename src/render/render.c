@@ -27,8 +27,8 @@ static int	is_shadowed(t_scene *scene, t_tuple point, t_tuple normal)
 	if (distance <= SHADOW_BIAS)
 		return (0);
 	shadow_ray = new_ray(over_point, normalize_vector(to_light));
-	return (object_hit_between(scene->objects, shadow_ray, SHADOW_BIAS,
-			distance - SHADOW_BIAS));
+	return (object_hit_between(scene->objects, shadow_ray, SHADOW_BIAS, distance
+			- SHADOW_BIAS));
 }
 
 static t_color	ambient_at(t_material material, t_ambient ambient)

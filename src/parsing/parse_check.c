@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_check.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/02 15:10:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/02 22:26:15 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/09/08 16:15:17 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,8 @@ int	parse_orientation(char *s, t_tuple *out)
 		return (1);
 	if (is_equal_d(out->x, 0) && is_equal_d(out->y, 0) && is_equal_d(out->z, 0))
 		return (1);
-	// Note:
-	// Some cases aren't catched by the check --> normalize instead of rejecting
-	// We can also reject 
+	if (!is_equal_d(vector_magnitude(*out), 1.0))
+		return (1);
 	*out = normalize_vector(*out);
 	return (0);
 }

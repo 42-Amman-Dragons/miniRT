@@ -12,18 +12,17 @@
 
 #include "minirt.h"
 
-t_tuple new_tuple(double x, double y, double z, double w)
+t_tuple	new_tuple(double x, double y, double z, double w)
 {
-    return ((t_tuple){x,y,z,w});
+	return ((t_tuple){x, y, z, w});
 }
 
-t_tuple new_point(double x, double y, double z)
+t_tuple	new_point(double x, double y, double z)
 {
-        return ((t_tuple){x,y,z,1});
+	return ((t_tuple){x, y, z, 1});
 }
 
-t_tuple new_vector(double x, double y, double z)
+t_tuple	new_vector(double x, double y, double z)
 {
-        return ((t_tuple){x,y,z,0});
+	return ((t_tuple){x, y, z, 0});
 }
-

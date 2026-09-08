@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pexils_to_image.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/09 02:48:39 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/09 13:42:20 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/09/08 16:23:53 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,3 @@ void	put_pixel_to_image(t_rt *rt, int x, int y, t_color color)
 	rgb = color_to_rgb(color);
 	ft_memcpy(pixel, &rgb, bytes);
 }
-
-

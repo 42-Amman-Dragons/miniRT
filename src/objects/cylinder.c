@@ -6,22 +6,21 @@
 /*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/11 16:13:27 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/08/23 12:41:24 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/09/08 15:55:54 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-
 t_cylinder	new_cylinder(t_tuple center, t_tuple axis, double radius,
 		double height)
 {
-    t_cylinder  cyl;
-    
-    cyl.center = center;
-    cyl.axis = axis;
-    cyl.radius = radius;
-    cyl.height = height;
+	t_cylinder	cyl;
+
+	cyl.center = center;
+	cyl.axis = axis;
+	cyl.radius = radius;
+	cyl.height = height;
 	return (cyl);
 }
 
@@ -29,83 +28,44 @@ static t_intersections	*calc_cylinder_intersections(double t0, double t1,
 		t_ray ray, t_cylinder *cyl)
 {
 	t_intersections	*xs;
-	t_tuple		    point;
+	t_tuple			point;
 	double			axis_distance;
 
 	xs = new_intersections();
 	if (!xs)
 		return (NULL);
 	point = position(ray, t0);
-	axis_distance = dot_product(cyl->axis,
-			sub_tuples(point, cyl->center));
+	axis_distance = dot_product(cyl->axis, sub_tuples(point, cyl->center));
 	if (axis_distance <= cyl->height / 2.0 + EPSILON
 		&& axis_distance >= -cyl->height / 2.0 - EPSILON)
 		append_intrsection(xs, new_intersection(t0, cyl));
 	point = position(ray, t1);
-	axis_distance = dot_product(cyl->axis,
-			sub_tuples(point, cyl->center));
+	axis_distance = dot_product(cyl->axis, sub_tuples(point, cyl->center));
 	if (axis_distance <= cyl->height / 2.0 + EPSILON
 		&& axis_distance >= -cyl->height / 2.0 - EPSILON)
 		append_intrsection(xs, new_intersection(t1, cyl));
 	return (xs);
 }
 
-void add_upper_intersection(t_intersections	**xs,t_cylinder *cyl, t_ray ray, t_tuple to_ray)
+void	add_cylinder_intersections(t_intersections *xs, double abc[3],
+	t_ray ray, t_cylinder *cyl)
 {
-	double t;
-	t_tuple radial_p;
+	double	discriminant;
 
-	t = calc_t_for_upper_cap(cyl,ray, to_ray);
-	radial_p = calc_radial_v(cyl, ray, t);
-	if(dot_product(radial_p, radial_p) <= pow(cyl->radius,2) + EPSILON)
+	discriminant = abc[1] * abc[1] - 4.0 * abc[0] * abc[2];
+	if (discriminant >= -EPSILON)
 	{
-		append_intrsection(*xs, new_intersection(
-			t,
-			cyl
-		));
+		if (discriminant < 0.0)
+			discriminant = 0.0;
+		merge_intersections(xs, calc_cylinder_intersections((-abc[1]
+					- sqrt(discriminant)) / (2 * abc[0]), (-abc[1]
+					+ sqrt(discriminant)) / (2 * abc[0]), ray, cyl));
 	}
-}
-
-void add_lower_intersection(t_intersections	**xs,t_cylinder *cyl, t_ray ray, t_tuple to_ray)
-{
-	double t;
-	t_tuple radial_p;
-
-	t = calc_t_for_lower_cap(cyl,ray, to_ray);
-	radial_p = calc_radial_v(cyl, ray, t);
-	if(dot_product(radial_p, radial_p) <= pow(cyl->radius,2) + EPSILON)
-	{
-		append_intrsection(*xs, new_intersection(
-			t,
-			cyl
-		));
-	}
-}
-
-t_intersections *intersect_cap(t_cylinder *cyl, t_ray ray)
-{
-	t_intersections	*xs;
-	t_tuple	to_ray;
-	double			denominator;
-
-	denominator = dot_product(cyl->axis, ray.direction);
-	if (fabs(denominator) < EPSILON)
-		return (NULL);
-	xs = new_intersections();
-	if (!xs)
-		return (NULL);
-	to_ray = sub_tuples(ray.origin, cyl->center);
-	add_upper_intersection(&xs, cyl, ray, to_ray);
-	add_lower_intersection(&xs, cyl, ray, to_ray);
-	return (xs);
 }
 
 t_intersections	*intersect_cylinder(t_cylinder *cyl, t_ray ray)
 {
-	double			a;
-	double			b;
-	double			c;
-	double			discriminant;
+	double			abc[3];
 	t_tuple			origin;
 	t_tuple			direction;
 	t_intersections	*xs;
@@ -115,23 +75,15 @@ t_intersections	*intersect_cylinder(t_cylinder *cyl, t_ray ray)
 	origin = sub_tuples(ray.origin, cyl->center);
 	origin = find_radial_projection(origin, cyl->axis);
 	direction = find_radial_projection(ray.direction, cyl->axis);
-	a = dot_product(direction, direction);
-	b = 2 * dot_product(origin, direction);
-	c = dot_product(origin, origin) - cyl->radius * cyl->radius;
+	abc[0] = dot_product(direction, direction);
+	abc[1] = 2 * dot_product(origin, direction);
+	abc[2] = dot_product(origin, origin) - cyl->radius * cyl->radius;
 	xs = new_intersections();
 	if (!xs)
 		return (NULL);
-	if (!is_equal_d(a, 0))
+	if (!is_equal_d(abc[0], 0))
 	{
-		discriminant = b * b - 4.0 * a * c;
-		if (discriminant >= -EPSILON)
-		{
-			if (discriminant < 0.0)
-				discriminant = 0.0;
-			merge_intersections(xs, calc_cylinder_intersections((-b
-					- sqrt(discriminant)) / (2 * a), (-b + sqrt(discriminant))
-					/ (2 * a), ray, cyl));
-		}
+		add_cylinder_intersections(xs, abc, ray, cyl);
 	}
 	merge_intersections(xs, intersect_cap(cyl, ray));
 	return (xs);

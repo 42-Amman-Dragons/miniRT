@@ -70,21 +70,3 @@ void	free_intersections(t_intersections *intersections)
 	free(intersections->items);
 	free(intersections);
 }
-
-void	merge_intersections(t_intersections *result, t_intersections *temp)
-{
-	t_intersection	intersection;
-	int				i;
-
-	if (!temp)
-		return ;
-	i = 0;
-	while (i < temp->count)
-	{
-		intersection = new_intersection(temp->items[i].t,
-				temp->items[i].object);
-		append_intrsection(result, intersection);
-		i++;
-	}
-	free_intersections(temp);
-}

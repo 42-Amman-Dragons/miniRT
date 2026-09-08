@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init-camera.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/13 00:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/21 03:46:51 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/09/08 15:24:39 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	init_camera(t_camera *camera)
 		camera->half_height = half_view;
 	}
 	camera->pixel_size = camera->half_width * 2.0 / (double)WIN_W;
-	/*Up and right for the camera*/
 	world_up = world_up_for(camera->dir);
 	camera->right = normalize_vector(cross_product(world_up, camera->dir));
 	camera->up = normalize_vector(cross_product(camera->dir, camera->right));

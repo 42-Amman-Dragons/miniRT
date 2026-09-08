@@ -45,8 +45,7 @@ int	closest_object_hit(t_object *objects, t_ray ray, t_render_hit *result)
 	return (result->object != NULL);
 }
 
-int	object_hit_between(t_object *objects, t_ray ray, double min_t,
-		double max_t)
+int	object_hit_between(t_object *objects, t_ray ray, double min_t, double max_t)
 {
 	t_intersections	*xs;
 	int				i;

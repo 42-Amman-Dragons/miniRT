@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   scaling.c                                          :+:      :+:    :+:   */
+/*   merge_intersections.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/02 12:54:05 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/08/02 12:54:06 by hal-lawa         ###   ########.fr       */
+/*   Created: 2026/09/08 15:25:49 by hal-lawa          #+#    #+#             */
+/*   Updated: 2026/09/08 15:27:35 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-t_matrix *create_scaling(double x, double y, double z)
+void	merge_intersections(t_intersections *result, t_intersections *temp)
 {
-    t_matrix *result;
+	t_intersection	intersection;
+	int				i;
 
-    result = create_identity(4);
-    if(!result)
-        return (NULL);
-    result->data[0][0] = x;
-    result->data[1][1] = y;
-    result->data[2][2] = z;
-
-    return (result);
+	if (!temp)
+		return ;
+	i = 0;
+	while (i < temp->count)
+	{
+		intersection = new_intersection(temp->items[i].t,
+				temp->items[i].object);
+		append_intrsection(result, intersection);
+		i++;
+	}
+	free_intersections(temp);
 }
