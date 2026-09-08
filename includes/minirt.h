@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/01 15:22:22 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/08/23 12:34:16 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/09/05 02:17:44 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # define MASK_KEYPRESS 1L
 # define MASK_EXPOSE 32768L
 # define EPSILON 1e-9
+# define PI 3.14159265358979323846
 
 typedef struct s_tuple
 {
@@ -201,6 +202,8 @@ void				render_scene(t_rt *rt);
 t_color				color_at(t_scene *scene, t_ray ray);
 int					closest_object_hit(t_object *objects, t_ray ray,
 						t_render_hit *result);
+int					object_hit_between(t_object *objects, t_ray ray,
+						double min_t, double max_t);
 t_tuple				object_normal_at(t_object *object, t_tuple point);
 t_material			object_material(t_object *object);
 
@@ -339,7 +342,7 @@ void 				handle_specular(t_color *amb_diff_spect, t_material material,
 
 // plane
 t_plane				new_plane(t_tuple point, t_tuple normal, t_color color);
-t_intersections		*intersect_plane(t_plane plane, t_ray ray);
+t_intersections		*intersect_plane(t_plane *plane, t_ray ray);
 
 // cylinder
 t_cylinder			new_cylinder(t_tuple center, t_tuple axis, double radius,
@@ -347,9 +350,11 @@ t_cylinder			new_cylinder(t_tuple center, t_tuple axis, double radius,
 t_intersections		*intersect_cylinder(t_cylinder *cyl, t_ray ray);
 t_tuple				cyl_normal_at(t_cylinder cyl, t_tuple point);
 void				ft_swap(double *val1, double *val2);
-t_tuple find_radial_projection(t_tuple v, t_tuple axis);
-double calc_t_for_upper_cap(t_cylinder *cyl, t_ray ray,t_tuple to_ray);
-double calc_t_for_lower_cap(t_cylinder *cyl, t_ray ray,t_tuple to_ray);
-t_tuple calc_radial_v(t_cylinder *cyl, t_ray ray, double t);
+t_tuple				find_radial_projection(t_tuple v, t_tuple axis);
+double				calc_t_for_upper_cap(t_cylinder *cyl, t_ray ray,
+						t_tuple to_ray);
+double				calc_t_for_lower_cap(t_cylinder *cyl, t_ray ray,
+						t_tuple to_ray);
+t_tuple				calc_radial_v(t_cylinder *cyl, t_ray ray, double t);
 
 #endif

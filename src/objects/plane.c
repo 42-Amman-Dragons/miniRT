@@ -31,17 +31,21 @@ t_plane new_plane(t_tuple point, t_tuple normal, t_color color)
     ...
     t = -((p0 - a).n) / v.n
 */
-t_intersections *intersect_plane(t_plane plane, t_ray ray)
+t_intersections *intersect_plane(t_plane *plane, t_ray ray)
 {
+    double denominator;
     double t;
     t_intersection intersection;
     t_intersections * xs;
     // If the ray was paralel to the plane no intersections.
-    if(dot_product(ray.direction, plane.normal) == 0)
+    if (!plane)
         return (NULL);
-    t = (-1 * dot_product(sub_tuples(ray.origin, plane.point), plane.normal))
-        / dot_product(ray.direction, plane.normal);
-    intersection = new_intersection(t, &plane);   
+    denominator = dot_product(ray.direction, plane->normal);
+    if(fabs(denominator) < EPSILON)
+        return (NULL);
+    t = (-1 * dot_product(sub_tuples(ray.origin, plane->point), plane->normal))
+        / denominator;
+    intersection = new_intersection(t, plane);
     xs = new_intersections();
     if(!xs)
         return (NULL);
