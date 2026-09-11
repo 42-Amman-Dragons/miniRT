@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/01 15:22:22 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/09/08 15:57:16 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/09/09 09:16:23 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 # define EV_DESTROY 17
 # define MASK_KEYPRESS 1L
 # define MASK_EXPOSE 32768L
-# define EPSILON 1e-9
+# define EPSILON 1e-5
 # define PI 3.14159265358979323846
 
 typedef struct s_tuple
