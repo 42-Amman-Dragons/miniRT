@@ -70,7 +70,7 @@ t_intersections	*intersect_cylinder(t_cylinder *cyl, t_ray ray)
 	t_tuple			direction;
 	t_intersections	*xs;
 
-	if (!cyl || cyl->radius <= 0.0 || cyl->height <= 0.0)
+	if (!cyl || cyl->radius <= 0.0 || cyl->height < 0.0)
 		return (NULL);
 	origin = sub_tuples(ray.origin, cyl->center);
 	origin = find_radial_projection(origin, cyl->axis);
@@ -81,7 +81,7 @@ t_intersections	*intersect_cylinder(t_cylinder *cyl, t_ray ray)
 	xs = new_intersections();
 	if (!xs)
 		return (NULL);
-	if (!is_equal_d(abc[0], 0))
+	if (!is_equal_d(cyl->height, 0.0) && !is_equal_d(abc[0], 0))
 	{
 		add_cylinder_intersections(xs, abc, ray, cyl);
 	}

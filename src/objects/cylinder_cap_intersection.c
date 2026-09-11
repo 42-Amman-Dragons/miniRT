@@ -54,6 +54,7 @@ t_intersections	*intersect_cap(t_cylinder *cyl, t_ray ray)
 		return (NULL);
 	to_ray = sub_tuples(ray.origin, cyl->center);
 	add_upper_intersection(&xs, cyl, ray, to_ray);
-	add_lower_intersection(&xs, cyl, ray, to_ray);
+	if (!is_equal_d(cyl->height, 0.0))
+		add_lower_intersection(&xs, cyl, ray, to_ray);
 	return (xs);
 }

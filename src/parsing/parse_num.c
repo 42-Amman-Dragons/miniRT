@@ -81,7 +81,7 @@ int	parse_double(char *s, double *out)
 		value = value * 10.0 + (s[i++] - '0');
 	if (parse_fraction(s, &i, &value))
 		return (1);
-	if (s[i])
+	if (s[i] || !isfinite(value))
 		return (1);
 	*out = value * sign;
 	return (0);

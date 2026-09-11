@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minirt.h"
+#include <errno.h>
 
 int	has_rt_extension(char *path)
 {
@@ -28,14 +29,18 @@ int	read_scene(int fd, t_scene *scene)
 	int		status;
 
 	status = 0;
+	errno = 0;
 	line = get_next_line(fd);
 	while (line)
 	{
 		if (!status && count_words(line) > 0)
 			status = parse_line(line, scene);
 		free(line);
+		errno = 0;
 		line = get_next_line(fd);
 	}
+	if (!status && errno)
+		return (rt_error("failed while reading the scene file"));
 	return (status);
 }
 

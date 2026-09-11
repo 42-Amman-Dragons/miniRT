@@ -63,8 +63,9 @@ int	parse_cylinder(char **tokens, t_scene *scene)
 		return (rt_error("the cylinder axis must be a normalised vector"));
 	if (parse_positive(tokens[3], &diameter))
 		return (rt_error("the cylinder diameter must be a positive number"));
-	if (parse_positive(tokens[4], &obj.shape.cylinder.height))
-		return (rt_error("the cylinder height must be a positive number"));
+	if (parse_double(tokens[4], &obj.shape.cylinder.height)
+		|| obj.shape.cylinder.height < 0.0)
+		return (rt_error("the cylinder height must be non-negative"));
 	if (parse_color(tokens[5], &obj.color))
 		return (rt_error("the cylinder colour must be R,G,B in [0,255]"));
 	obj.shape.cylinder = new_cylinder(obj.shape.cylinder.center,
