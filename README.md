@@ -15,7 +15,7 @@ Examples of renders produced by the project:
 ![Golden hour scene](./images/scene1.png)
 ![Bracelet render](./images/scene2.png)
 
-## How to run
+## Instructions
 
 1. Clone the repository:
    `git clone <repository-link>`
