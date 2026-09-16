@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by mabuqare and hal-lawa.*
+*This project has been created as part of the 42 curriculum by **mabuqare** and **hal-lawa**.*
 
 ## Description
 
@@ -12,8 +12,10 @@ A shadow calculation is also performed by casting a secondary ray from the hit p
 
 Examples of renders produced by the project:
 
-![Golden hour scene](./images/scene1.png)
-![Bracelet render](./images/scene2.png)
+![Bracelet render](./images/bracelet.png)
+![Snowman](./images/snowman.png)
+![biliardo](./images/biliardo.png)
+![Golden hour scene](./images/golden_hour.png)
 
 ## Instructions
 
@@ -29,8 +31,10 @@ Examples of renders produced by the project:
 Examples:
 
 ```bash
+./miniRT scenes/valid/bracelet.rt
+./miniRT scenes/valid/snowman.rt
+./miniRT scenes/valid/biliards.rt
 ./miniRT scenes/valid/golden_hour.rt
-./miniRT scenes/valid/scene2.rt
 ```
 
 If you want to create your own scene, add a new `.rt` file in the desired folder and run it with the compiled binary.
@@ -132,3 +136,6 @@ The AI was used as a helpful collaborator for:
 - Rewriting this Readme file.
 
 Thanks for reading this README. We hope you enjoy experimenting with MiniRT and extending it further. 💻🐉
+
+## Attribution
+The biliardo and snowman scene files were contributed by our peers **Lujain Alkhatib (lalkhati)** and **Noor Nasereddin (nnasered)**.
