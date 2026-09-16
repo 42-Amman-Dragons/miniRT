@@ -73,6 +73,7 @@ test-cylinder: $(LIBFT)
 	./$(CYLINDER_TEST)
 
 $(MLX_LIB):
+	git clone git@github.com:42paris/minilibx-linux.git $(MLX_DIR)
 	$(MAKE) -C $(MLX_DIR)
 
 $(LIBFT):
@@ -117,7 +118,7 @@ clean:
 	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	rm -f $(NAME)
+	rm -rf $(NAME) $(MLX_DIR)
 	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
